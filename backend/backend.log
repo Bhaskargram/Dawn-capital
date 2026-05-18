@@ -1,0 +1,201 @@
+
+> backend@1.0.0 dev
+> node server.js
+
+◇ injected env (16) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+FCM Setup Warning: No serviceAccountKey.json found and FIREBASE_SERVICE_ACCOUNT env var is missing. Push notifications will be disabled.
+Server started on port 5000 (accessible on all interfaces)
+MongoDB Connected: ac-xl2tjl8-shard-00-00.ptadmaj.mongodb.net
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/public/announcements?target=landing
+GET /api/config
+GET /api/public/announcements?target=landing
+GET /api/config
+GET /api/config
+GET /api/me
+GET /api/config
+GET /api/config
+GET /api/portfolio
+GET /api/me/notifications
+GET /api/me
+GET /api/me
+GET /api/portfolio
+GET /api/me/notifications
+GET /api/config
+GET /api/me
+GET /api/config
+GET /api/config
+GET /api/admin/investments/all
+GET /api/users
+GET /api/admin/loans/all
+GET /api/admin/leads/all
+GET /api/admin/announcements/all
+GET /api/config
+GET /api/users
+GET /api/admin/loans/all
+GET /api/admin/investments/all
+GET /api/config
+GET /api/config
+GET /api/admin/leads/all
+GET /api/admin/announcements/all
+GET /api/config
+GET /api/portfolio
+GET /api/portfolio
+GET /api/config
+POST /api/me/loans
+GET /api/portfolio
+Email could not be sent Error: No recipients defined
+    at SMTPConnection._formatError (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:887:19)
+    at SMTPConnection._setEnvelope (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:1126:34)
+    at SMTPConnection.send (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:701:14)
+    at sendMessage (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:1709:9)
+    at SMTPConnection.<anonymous> (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:626:26)
+    at SMTPConnection._processResponse (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:1072:20)
+    at SMTPConnection._onData (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:847:14)
+    at SMTPConnection._onSocketData (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:217:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+SMS sending skipped: No provider configured.
+GET /api/config
+GET /api/config
+GET /api/users
+GET /api/admin/loans/all
+GET /api/admin/leads/all
+GET /api/admin/investments/all
+GET /api/admin/announcements/all
+GET /api/config
+GET /api/users
+GET /api/admin/announcements/all
+GET /api/admin/leads/all
+GET /api/admin/investments/all
+GET /api/admin/loans/all
+GET /api/config
+GET /api/config
+GET /api/config
+PUT /api/admin/loans/6a0b8683d7ed8cd4bdeae38e/status
+(node:59355) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Email could not be sent Error: No recipients defined
+    at SMTPConnection._formatError (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:887:19)
+    at SMTPConnection._setEnvelope (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:1126:34)
+    at SMTPConnection.send (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:701:14)
+    at sendMessage (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:1709:9)
+    at SMTPConnection.<anonymous> (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:626:26)
+    at SMTPConnection._processResponse (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:1072:20)
+    at SMTPConnection._onData (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:847:14)
+    at SMTPConnection._onSocketData (/home/bhaskar/Neera project/Dawn Multipurpose/backend/node_modules/nodemailer/lib/smtp-connection/index.js:217:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+SMS sending skipped: No provider configured.
+GET /api/users
+GET /api/admin/loans/all
+GET /api/admin/investments/all
+GET /api/admin/leads/all
+GET /api/config
+GET /api/admin/announcements/all
+GET /api/config
+GET /api/users
+GET /api/admin/loans/all
+GET /api/admin/leads/all
+GET /api/admin/investments/all
+GET /api/admin/announcements/all
+GET /api/config
+GET /api/users
+GET /api/admin/announcements/all
+GET /api/admin/leads/all
+GET /api/admin/loans/all
+GET /api/admin/investments/all
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/users
+GET /api/admin/loans/all
+GET /api/admin/investments/all
+GET /api/admin/leads/all
+GET /api/admin/announcements/all
+GET /api/admin/leads/all
+GET /api/users
+GET /api/admin/announcements/all
+GET /api/config
+GET /api/admin/loans/all
+GET /api/admin/investments/all
+GET /api/config
+GET /api/config
+GET /api/me
+GET /api/config
+GET /api/config
+GET /api/portfolio
+GET /api/me/notifications
+GET /api/portfolio
+GET /api/me/notifications
+GET /api/me
+GET /api/config
+GET /api/public/announcements?target=landing
+GET /api/public/announcements?target=landing
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+POST /api/auth/login
+GET /api/config
+POST /api/auth/login
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+POST /api/auth/login
+POST /api/auth/forgot-password
+Message sent: <ad915081-ca66-98ed-abcf-a19b28abfa77@dawncapital.online>
+GET /api/config
+GET /api/config
+GET /api/config
+POST /api/auth/reset-password/68c8692a49dc1a8494ac6e5b85e04e3f19141dca42232367666579ec249554dc
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+POST /api/auth/login
+POST /api/auth/login
+POST /api/auth/login
+POST /api/auth/login
+POST /api/auth/login
+POST /api/auth/login
+GET /api/config
+GET /api/config
+POST /api/auth/login
+GET /api/me
+GET /api/config
+GET /api/portfolio
+GET /api/me/notifications
+GET /api/me
+GET /api/me
+GET /api/portfolio
+GET /api/me/notifications
+GET /api/config
+GET /api/me
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config
+GET /api/config

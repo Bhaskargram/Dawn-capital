@@ -1,0 +1,12 @@
+📐 Recommended Logo Sizes
+Location	Recommended Size	Format
+Website header	200×50 px or wider (height ~44–50px)	PNG with transparent background
+Website footer	200×50 px	PNG transparent
+Sidebar (Admin/Customer)	48×48 px icon or 200×48 px horizontal	PNG transparent
+Mobile app (splash)	512×512 px (will scale down)	PNG transparent
+Mobile login	256×256 px	PNG transparent
+Favicon	32×32 px or 64×64 px	ICO or PNG
+S3/CDN upload	1024×1024 px master (highest quality)	PNG transparent
+Best practice: Upload your logo as 1024×1024 px PNG with transparent background to S3 and let CSS/styles scale it down. This ensures it's sharp on retina/high-DPI displays. The current dawn6.png and dawn3.png should ideally be at least 500px wide for crisp rendering.
+
+Once you update the MongoDB URI and restart the backend, everything will work. Let me know your MongoDB URI and I can update the .env for you, or you can do it directly.
