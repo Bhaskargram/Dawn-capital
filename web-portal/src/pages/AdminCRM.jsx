@@ -709,14 +709,15 @@ const SettingsTab = memo(({ config, setLocalConfig, announcements, onAddAnn, onD
 });
 
 const AnnouncementsTab = memo(({ announcements, onAddAnn, onDeleteAnn }) => {
-  const [annForm, setAnnForm] = useState({ title: '', message: '', type: 'info', target: 'both' });
+  const [annForm, setAnnForm] = useState({ title: '', message: '', type: 'info', target: 'both', link: '' });
   return (
     <Grid cols={1}>
       <SectionCard title="📢 Broadcast Manager & Announcements">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '30px' }}>
-          <form onSubmit={e => { e.preventDefault(); onAddAnn(annForm); setAnnForm({ title: '', message: '', type: 'info', target: 'both' }); }} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <form onSubmit={e => { e.preventDefault(); onAddAnn(annForm); setAnnForm({ title: '', message: '', type: 'info', target: 'both', link: '' }); }} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <FormField label="Title"><input className="admin-input" value={annForm.title} onChange={e => setAnnForm({...annForm, title: e.target.value})} required /></FormField>
             <FormField label="Message"><textarea className="admin-input" value={annForm.message} onChange={e => setAnnForm({...annForm, message: e.target.value})} required style={{ minHeight: '80px' }} /></FormField>
+            <FormField label="Link (Optional)"><input className="admin-input" value={annForm.link} onChange={e => setAnnForm({...annForm, link: e.target.value})} placeholder="https://..." /></FormField>
             <FormField label="Show To (Target)">
               <select className="admin-input" value={annForm.target} onChange={e => setAnnForm({...annForm, target: e.target.value})}>
                 <option value="both">Both (Landing Page & Portal)</option>
@@ -955,7 +956,7 @@ export default function AdminCRM() {
       {/* Sidebar */}
       <motion.div animate={{ width: sidebarOpen ? '280px' : '80px' }} style={{ background: '#111', borderRight: '1px solid rgba(255,255,255,0.05)', padding: '30px 15px', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: sidebarOpen ? 'flex-start' : 'center', gap: '15px', marginBottom: '40px', overflow: 'hidden' }}>
-          <img src="https://dawnlogos.s3.amazonaws.com/dawn6.png" alt="Dawn" style={{ width: sidebarOpen ? '48px' : '40px', height: sidebarOpen ? '48px' : '40px', objectFit: 'contain', transition: 'all 0.3s' }} />
+          <img src={config?.branding?.logoUrl || 'https://dawnlogos.s3.amazonaws.com/dawn6.png'} alt="Dawn" style={{ width: sidebarOpen ? '48px' : '40px', height: sidebarOpen ? '48px' : '40px', objectFit: 'contain', transition: 'all 0.3s' }} />
         </div>
         
         <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>

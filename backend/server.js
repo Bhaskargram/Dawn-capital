@@ -20,6 +20,15 @@ app.use(cors({
 }));
 app.use(express.json({ extended: false, limit: '10mb' }));
 
+// Security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
 // Request logger for debugging 404s
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);

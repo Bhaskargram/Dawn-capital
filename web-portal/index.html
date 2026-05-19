@@ -2,9 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" id="dynamic-favicon" type="image/png" href="https://dawnlogos.s3.amazonaws.com/dawn6.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>web-portal</title>
+    <meta name="description" content="Dawn Capital — Institutional precision financial services. Investments, loans, and credit solutions." />
+    <meta name="theme-color" content="#0a0a14" />
+    <title>Dawn Capital</title>
+    <script>
+      // Dynamically update favicon from API config
+      fetch((window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'http://' + window.location.hostname + ':5000') + '/api/config')
+        .then(r => r.json())
+        .then(c => {
+          if (c?.branding?.faviconUrl || c?.branding?.logoUrl) {
+            document.getElementById('dynamic-favicon').href = c.branding.faviconUrl || c.branding.logoUrl;
+          }
+          if (c?.branding?.companyName) {
+            document.title = c.branding.companyName;
+          }
+        }).catch(() => {});
+    </script>
   </head>
   <body>
     <div id="root"></div>

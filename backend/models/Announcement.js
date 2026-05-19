@@ -22,6 +22,10 @@ const AnnouncementSchema = new mongoose.Schema({
     type: String,
     enum: ['landing', 'portal', 'both'],
     default: 'both'
+  },
+  link: {
+    type: String,
+    default: ''
   }
 }, { timestamps: true });
 

@@ -14,7 +14,9 @@ const {
   notifyInvestmentReceived,
   notifyInvestmentRejected,
   notifyKYCApproved,
-  notifyKYCRejected
+  notifyKYCRejected,
+  notifyCreditScoreUpdate,
+  notifyAccountActivity
 } = require('../utils/notificationService');
 
 // Middleware to ensure user is admin
@@ -39,7 +41,7 @@ router.post('/investments', adminAuth, async (req, res) => {
     // Send investment received notification
     const user = await User.findById(userId);
     if (user) {
-      await notifyInvestmentReceived(user._id, amount, type, user.email, user.phone).catch(err => console.error('Notification failed:', err));
+      await notifyInvestmentReceived(user._id, amount, type, user.email).catch(err => console.error('Notification failed:', err));
     }
     
     res.json(investment);
@@ -96,16 +98,14 @@ router.put('/loans/:id/status', adminAuth, async (req, res) => {
           loan.user._id,
           loan.amount,
           loan.loanId,
-          loan.user.email,
-          loan.user.phone
+          loan.user.email
         ).catch(err => console.error('Notification failed:', err));
       } else if (status === 'rejected') {
         await notifyLoanRejected(
           loan.user._id,
           loan.loanId,
           rejectionReason || 'Application criteria not met',
-          loan.user.email,
-          loan.user.phone
+          loan.user.email
         ).catch(err => console.error('Notification failed:', err));
       }
     }
@@ -178,14 +178,22 @@ router.put('/users/:id', adminAuth, async (req, res) => {
     if (isBlocked !== undefined) updates.isBlocked = isBlocked;
     if (kyc?.rejectionReason !== undefined) updates['kyc.rejectionReason'] = kyc.rejectionReason;
 
+    // Get old user to detect score changes
+    const oldUser = await User.findById(req.params.id).select('creditScore');
+
     const user = await User.findByIdAndUpdate(req.params.id, { $set: updates }, { new: true }).select('-password');
     
+    // Send credit score notification if changed
+    if (user && creditScore !== undefined && oldUser && Number(creditScore) !== oldUser.creditScore) {
+      await notifyCreditScoreUpdate(user._id, Number(creditScore), user.email).catch(err => console.error('Credit score notification failed:', err));
+    }
+
     // Send KYC notifications
     if (user && kycStatus) {
       if (kycStatus === 'verified') {
-        await notifyKYCApproved(user._id, user.email, user.phone).catch(err => console.error('Notification failed:', err));
+        await notifyKYCApproved(user._id, user.email).catch(err => console.error('Notification failed:', err));
       } else if (kycStatus === 'rejected') {
-        await notifyKYCRejected(user._id, kyc?.rejectionReason || 'Documents not clear', user.email, user.phone).catch(err => console.error('Notification failed:', err));
+        await notifyKYCRejected(user._id, kyc?.rejectionReason || 'Documents not clear', user.email).catch(err => console.error('Notification failed:', err));
       }
     }
     
@@ -212,9 +220,10 @@ router.post('/achievers', adminAuth, async (req, res) => {
 // @desc    Add a global Announcement
 router.post('/announcements', adminAuth, async (req, res) => {
   try {
-    const { title, message, type, isActive, target } = req.body;
+    const { title, message, type, isActive, target, link } = req.body;
+    if (!title || !message) return res.status(400).json({ msg: 'Title and message are required' });
     const Announcement = require('../models/Announcement');
-    const announcement = new Announcement({ title, message, type, isActive, target });
+    const announcement = new Announcement({ title, message, type, isActive, target, link });
     await announcement.save();
     res.json(announcement);
   } catch (err) {
@@ -385,8 +394,7 @@ router.put('/investments/:id/status', adminAuth, async (req, res) => {
           investment.user._id,
           investment.type,
           rejectionReason || 'Documents not complete',
-          investment.user.email,
-          investment.user.phone
+          investment.user.email
         ).catch(err => console.error('Notification failed:', err));
       } else if (status === 'matured') {
         const totalMaturity = maturityAmount || investment.amount * (1 + investment.interestRate / 100);
@@ -395,8 +403,7 @@ router.put('/investments/:id/status', adminAuth, async (req, res) => {
           investment.amount,
           totalMaturity,
           investment.type,
-          investment.user.email,
-          investment.user.phone
+          investment.user.email
         ).catch(err => console.error('Notification failed:', err));
       }
     }

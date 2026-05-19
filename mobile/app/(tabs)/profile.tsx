@@ -191,7 +191,7 @@ export default function ProfileScreen() {
           <View style={s.card}>
             <Text style={s.cardTitle}>Support & Contact</Text>
             <View style={s.fieldWrap}>
-              <Text style={{ color: 'white', fontSize: 15, marginBottom: 8 }}>Email: dawncapitalglobal@gmail.com</Text>
+              <Text style={{ color: 'white', fontSize: 15, marginBottom: 8 }}>Email: support@dawncapital.online</Text>
               <Text style={{ color: 'white', fontSize: 15, marginBottom: 8 }}>Phone 1: +91 9862519900</Text>
               <Text style={{ color: 'white', fontSize: 15, marginBottom: 8 }}>Phone 2: +91 9233777509</Text>
             </View>

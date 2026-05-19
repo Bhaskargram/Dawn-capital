@@ -19,6 +19,7 @@ const NotificationSchema = new mongoose.Schema({
     enum: [
       'general',
       'loan_submitted',
+      'loan_pending',
       'loan_approved',
       'loan_rejected',
       'loan_overdue',
@@ -28,6 +29,8 @@ const NotificationSchema = new mongoose.Schema({
       'kyc_submitted',
       'kyc_approved',
       'kyc_rejected',
+      'credit_score_update',
+      'account_activity',
       'announcement'
     ],
     default: 'general'
@@ -39,7 +42,15 @@ const NotificationSchema = new mongoose.Schema({
   actionUrl: {
     type: String,
     default: null
+  },
+  metadata: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {}
   }
 }, { timestamps: true });
+
+// Index for efficient user-based queries
+NotificationSchema.index({ user: 1, createdAt: -1 });
+NotificationSchema.index({ user: 1, isRead: 1 });
 
 module.exports = mongoose.model('Notification', NotificationSchema);

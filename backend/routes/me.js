@@ -101,7 +101,7 @@ router.put('/', auth, async (req, res) => {
 
     const user = await User.findByIdAndUpdate(req.user.id, { $set: updates }, { new: true }).select('-password');
     if (updates.kycStatus === 'submitted' && user) {
-      notifyKYCSubmitted(user._id, user.email, user.phone).catch(err => console.error('KYC notification failed:', err.message));
+      notifyKYCSubmitted(user._id, user.email).catch(err => console.error('KYC notification failed:', err.message));
     }
     res.json(user);
   } catch (err) {
@@ -222,7 +222,7 @@ router.post('/loans', auth, async (req, res) => {
     
     // Send notification asynchronously
     if (populatedLoan && populatedLoan.user) {
-      notifyLoanSubmitted(populatedLoan.user._id, populatedLoan.amount, populatedLoan.loanId, populatedLoan.user.email, populatedLoan.user.phone)
+      notifyLoanSubmitted(populatedLoan.user._id, populatedLoan.amount, populatedLoan.loanId, populatedLoan.user.email)
         .catch(err => console.error('Loan submit notification failed:', err.message));
     }
     
@@ -274,6 +274,29 @@ router.delete('/fcm-token', auth, async (req, res) => {
     res.json({ msg: 'FCM token removed' });
   } catch (err) {
     console.error('FCM TOKEN REMOVE ERROR:', err.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+// PUT /fcm-token — Refresh/replace FCM token
+router.put('/fcm-token', auth, async (req, res) => {
+  try {
+    const { oldToken, newToken } = req.body;
+    if (!newToken) return res.status(400).json({ msg: 'New token is required' });
+    
+    const update = {};
+    if (oldToken) {
+      // Remove old token and add new one atomically
+      await User.findByIdAndUpdate(req.user.id, {
+        $pull: { fcmTokens: oldToken }
+      });
+    }
+    await User.findByIdAndUpdate(req.user.id, {
+      $addToSet: { fcmTokens: newToken }
+    });
+    res.json({ msg: 'FCM token refreshed' });
+  } catch (err) {
+    console.error('FCM TOKEN REFRESH ERROR:', err.message);
     res.status(500).json({ msg: 'Server error' });
   }
 });

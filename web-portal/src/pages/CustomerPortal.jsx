@@ -5,7 +5,7 @@ import {
   DollarSign, Briefcase, FileText, Activity, Bell, Gift, 
   ShieldCheck, LogOut, User, Menu, X, Settings, 
   CreditCard, TrendingUp, Clock, ChevronRight, PieChart,
-  ArrowUpRight, AlertCircle, CheckCircle, Info, HelpCircle
+  ArrowUpRight, AlertCircle, CheckCircle, Info, HelpCircle, BarChart3
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CreditScoreMeter from '../components/CreditScoreMeter';
@@ -387,7 +387,7 @@ const SupportTab = memo(() => (
             </div>
             <div>
               <div style={{ color: '#8a8aa0', fontSize: '0.8rem', fontWeight: '800', textTransform: 'uppercase' }}>Email Support</div>
-              <div style={{ fontSize: '1.1rem', fontWeight: '700' }}>dawncapitalglobal@gmail.com</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: '700' }}>support@dawncapital.online</div>
             </div>
           </div>
         </div>
@@ -424,6 +424,69 @@ const AboutUsTab = memo(() => (
   </motion.div>
 ));
 
+const CreditScoreTab = memo(({ user }) => {
+  const score = user?.creditScore || 0;
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <h1 style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '30px' }}>Credit Score</h1>
+      
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }} className="stack-on-mobile">
+        <div style={{ gridColumn: '1 / -1' }}>
+          <CreditScoreMeter score={score} lastUpdated={user?.updatedAt} />
+        </div>
+        
+        <GlassCard>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ color: '#8a8aa0', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>Score Range</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: '900', color: score >= 750 ? '#22c55e' : score >= 600 ? '#fbbf24' : score > 0 ? '#ef4444' : '#64748b' }}>
+              {score > 0 ? `${score} / 850` : '\u2014'}
+            </div>
+          </div>
+        </GlassCard>
+        
+        <GlassCard>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ color: '#8a8aa0', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>Rating</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: '900', color: score >= 750 ? '#22c55e' : score >= 650 ? '#3b82f6' : score >= 600 ? '#fbbf24' : score > 0 ? '#ef4444' : '#64748b' }}>
+              {score >= 750 ? 'Excellent' : score >= 650 ? 'Good' : score >= 600 ? 'Fair' : score > 0 ? 'Needs Improvement' : 'N/A'}
+            </div>
+          </div>
+        </GlassCard>
+      </div>
+
+      {score === 0 && (
+        <GlassCard style={{ marginTop: '24px', textAlign: 'center', padding: '40px' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: '16px' }}>📊</div>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '12px', color: '#fff' }}>Score Not Available Yet</h3>
+          <p style={{ color: '#8a8aa0', lineHeight: '1.7', maxWidth: '400px', margin: '0 auto' }}>
+            Your credit score will be updated soon. We will notify you via email and push notification once your score is available.
+          </p>
+        </GlassCard>
+      )}
+
+      <GlassCard style={{ marginTop: '24px' }}>
+        <h3 style={{ fontSize: '1rem', fontWeight: '800', marginBottom: '16px', color: '#fff' }}>📋 Score Breakdown</h3>
+        <div style={{ display: 'grid', gap: '12px' }}>
+          {[
+            { range: '750-850', label: 'Excellent', color: '#22c55e', desc: 'Best rates, instant approval', min: 750 },
+            { range: '650-749', label: 'Good', color: '#3b82f6', desc: 'Competitive rates available', min: 650 },
+            { range: '600-649', label: 'Fair', color: '#fbbf24', desc: 'Some limitations may apply', min: 600 },
+            { range: '300-599', label: 'Poor', color: '#ef4444', desc: 'Limited options, work to improve', min: 300 },
+          ].map(tier => (
+            <div key={tier.range} style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '12px 16px', background: score >= tier.min && score > 0 ? `${tier.color}10` : 'transparent', borderRadius: '10px', border: `1px solid ${score >= tier.min && score > 0 ? tier.color + '30' : 'rgba(255,255,255,0.03)'}` }}>
+              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: tier.color, flexShrink: 0 }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: '700', fontSize: '0.9rem' }}>{tier.range} — {tier.label}</div>
+                <div style={{ color: '#8a8aa0', fontSize: '0.75rem' }}>{tier.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </GlassCard>
+    </motion.div>
+  );
+});
+
 
 // ══════════ MAIN PORTAL COMPONENT ══════════
 
@@ -434,6 +497,7 @@ export default function CustomerPortal() {
   const [portfolio, setPortfolio] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [config, setConfig] = useState(null);
   
   // Form States
   const [loanForm, setLoanForm] = useState({ amount: '', durationMonths: '12', purpose: '', monthlyIncome: '' });
@@ -463,13 +527,15 @@ export default function CustomerPortal() {
     if (!token) return navigate('/login');
     const headers = { 'x-auth-token': token };
     try {
-      const [uRes, pRes, nRes] = await Promise.all([
+      const [uRes, pRes, nRes, cRes] = await Promise.all([
         axios.get(`${API}/me`, { headers }),
         axios.get(`${API}/portfolio`, { headers }),
-        axios.get(`${API}/me/notifications`, { headers }).catch(() => ({ data: [] }))
+        axios.get(`${API}/me/notifications`, { headers }).catch(() => ({ data: [] })),
+        axios.get(`${API}/config`).catch(() => ({ data: {} }))
       ]);
       setUser(uRes.data);
       setPortfolio(pRes.data);
+      setConfig(cRes.data);
       setProfileForm({ name: uRes.data.name, phone: uRes.data.phone || '', address: uRes.data.address || '' });
       setKycForm({
         panNumber: uRes.data.kyc?.panNumber || '',
@@ -549,7 +615,14 @@ export default function CustomerPortal() {
     window.location.replace('/login');
   };
 
-  if (loading) return <div className="portal-loading"><span>DAWN</span></div>;
+  if (loading) return (
+    <div className="portal-loading">
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+        <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} style={{ width: '40px', height: '40px', border: '3px solid rgba(255,255,255,0.1)', borderTop: `3px solid ${pc}`, borderRadius: '50%' }} />
+        <span>DAWN</span>
+      </div>
+    </div>
+  );
 
   const score = user?.creditScore || 0;
   const scoreColor = score >= 750 ? '#22c55e' : score >= 600 ? '#fbbf24' : '#ef4444';
@@ -557,10 +630,11 @@ export default function CustomerPortal() {
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <Activity size={18} /> },
-    { id: 'notifications', label: 'Notifications', icon: <Bell size={18} /> },
     { id: 'portfolio', label: 'My Portfolio', icon: <Briefcase size={18} /> },
     { id: 'apply', label: 'Apply Loan', icon: <FileText size={18} /> },
+    { id: 'credit-score', label: 'Credit Score', icon: <BarChart3 size={18} /> },
     { id: 'kyc', label: 'KYC', icon: <ShieldCheck size={18} /> },
+    { id: 'notifications', label: 'Notifications', icon: <Bell size={18} />, badge: notifications.filter(n => !n.isRead).length || null },
     { id: 'profile', label: 'Settings', icon: <Settings size={18} /> },
     { id: 'support', label: 'Support', icon: <HelpCircle size={18} /> },
     { id: 'about', label: 'About Us', icon: <Info size={18} /> },
@@ -591,7 +665,7 @@ export default function CustomerPortal() {
           overflow: 'hidden'
         }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: sidebarOpen ? 'space-between' : 'center', gap: '15px', marginBottom: '40px' }}>
-          <img src="https://dawnlogos.s3.amazonaws.com/dawn6.png" alt="Dawn" style={{ width: sidebarOpen ? '48px' : '40px', height: sidebarOpen ? '48px' : '40px', objectFit: 'contain', transition: 'all 0.3s' }} />
+          <img src={config?.branding?.logoUrl || 'https://dawnlogos.s3.amazonaws.com/dawn6.png'} alt="Dawn" style={{ width: sidebarOpen ? '48px' : '40px', height: sidebarOpen ? '48px' : '40px', objectFit: 'contain', transition: 'all 0.3s' }} />
           {isMobile && sidebarOpen && (
             <button onClick={() => setSidebarOpen(false)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}>
               <X size={24} />
@@ -602,7 +676,11 @@ export default function CustomerPortal() {
         <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {menuItems.map(item => (
             <button key={item.id} onClick={() => { setActiveTab(item.id); if (isMobile) setSidebarOpen(false); }} className={`nav-item ${activeTab === item.id ? 'active' : ''}`}>
-              {item.icon} {sidebarOpen && <span>{item.label}</span>}
+              <span style={{ position: 'relative' }}>
+                {item.icon}
+                {item.badge && <span style={{ position: 'absolute', top: '-4px', right: '-6px', width: '14px', height: '14px', borderRadius: '50%', background: pc, fontSize: '0.55rem', fontWeight: '900', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>{item.badge > 9 ? '9+' : item.badge}</span>}
+              </span>
+              {sidebarOpen && <span>{item.label}</span>}
             </button>
           ))}
         </nav>
@@ -641,6 +719,7 @@ export default function CustomerPortal() {
             {activeTab === 'notifications' && <NotificationsTab notifications={notifications} />}
             {activeTab === 'portfolio' && <PortfolioTab portfolio={portfolio} />}
             {activeTab === 'apply' && <ApplyTab loanForm={loanForm} setLoanForm={setLoanForm} handleApplyLoan={handleApplyLoan} />}
+            {activeTab === 'credit-score' && <CreditScoreTab user={user} />}
             {activeTab === 'kyc' && <KYCTab user={user} kycForm={kycForm} setKycForm={setKycForm} handleUpdateKyc={handleUpdateKyc} />}
             {activeTab === 'profile' && <ProfileTab user={user} profileForm={profileForm} setProfileForm={setProfileForm} handleUpdateProfile={handleUpdateProfile} passwordForm={passwordForm} setPasswordForm={setPasswordForm} handleUpdatePassword={handleUpdatePassword} />}
             {activeTab === 'support' && <SupportTab />}

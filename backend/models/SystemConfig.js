@@ -13,7 +13,7 @@ const SystemConfigSchema = new mongoose.Schema({
     imageUrl: { type: String, default: '' },
     gifUrl: { type: String, default: '' },
     buttonText: { type: String, default: 'Contact Support' },
-    contactInfo: { type: String, default: 'support@dawnfintech.com' }
+    contactInfo: { type: String, default: 'support@dawncapital.online' }
   },
   branding: {
     logoUrl: { type: String, default: '' },
@@ -23,7 +23,7 @@ const SystemConfigSchema = new mongoose.Schema({
     companyName: { type: String, default: 'Dawn Capital' }
   },
   contact: {
-    email: { type: String, default: 'support@dawnfintech.com' },
+    email: { type: String, default: 'support@dawncapital.online' },
     phone: { type: String, default: '+1234567890' },
     address: { type: String, default: '' },
     whatsapp: { type: String, default: '' }
@@ -83,6 +83,23 @@ const SystemConfigSchema = new mongoose.Schema({
       recipientName: { type: String, default: '' },
       qrCodeUrl: { type: String, default: '' },
       instructions: { type: String, default: '' }
+    }
+  },
+  // Email Notification Toggles
+  emailNotifications: {
+    enabled: { type: Boolean, default: true },
+    types: {
+      loan_submitted: { type: Boolean, default: true },
+      loan_approved: { type: Boolean, default: true },
+      loan_rejected: { type: Boolean, default: true },
+      investment_received: { type: Boolean, default: true },
+      investment_matured: { type: Boolean, default: true },
+      kyc_submitted: { type: Boolean, default: true },
+      kyc_approved: { type: Boolean, default: true },
+      kyc_rejected: { type: Boolean, default: true },
+      credit_score_update: { type: Boolean, default: true },
+      account_activity: { type: Boolean, default: true },
+      announcement: { type: Boolean, default: true }
     }
   },
   // Email Gateway Configuration

@@ -58,7 +58,7 @@ exports.register = async (req, res) => {
       <p style="color: #555;">Log in to your dashboard to get started.</p>
       <a href="${req.headers.origin || 'http://localhost:5173'}/login" style="display: inline-block; padding: 10px 20px; background-color: #C21B2F; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px;">Go to Dashboard</a>
     `;
-    sendEmail({ email: user.email, subject: 'Welcome to Dawn Capital!', html: welcomeHtml })
+    sendEmail({ to: user.email, subject: 'Welcome to Dawn Capital!', html: welcomeHtml })
       .catch(err => console.error('Welcome email failed (non-blocking):', err.message));
 
     const payload = { user: { id: user.id, role: user.role } };
@@ -134,7 +134,7 @@ exports.forgotPassword = async (req, res) => {
       <p style="color: #999; font-size: 12px; margin-top: 20px;">If you did not request this, please ignore this email.</p>
     `;
     // Fire-and-forget for reset email too
-    sendEmail({ email: user.email, subject: 'Password Reset Request - Dawn Capital', html: resetHtml })
+    sendEmail({ to: user.email, subject: 'Password Reset Request - Dawn Capital', html: resetHtml })
       .catch(err => console.error('Reset email failed (non-blocking):', err.message));
 
     res.json({ msg: 'Password reset link has been sent to your email' });

@@ -208,7 +208,7 @@ export default function LandingPage() {
   const heroImage = lp.heroImageUrl || lp.heroImage || branding.heroImage || DEFAULT_HERO_IMAGE;
   const heroTitle = lp.heroTitle || 'Smart Finance for Every Need';
   const LOGO_LIGHT = branding.logoUrl || 'https://dawnlogos.s3.amazonaws.com/dawn3.png';
-  const LOGO_DARK = 'https://dawnlogos.s3.amazonaws.com/dawn6.png';
+  const LOGO_DARK = branding.logoUrl || 'https://dawnlogos.s3.amazonaws.com/dawn6.png';
 
   return (
     <div className="dc-page" style={{ '--dc-primary': primary }}>
