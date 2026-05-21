@@ -330,6 +330,30 @@ Loan IDs are automatically generated with the **DAWN** prefix:
 ✅ Fixed: Mobile OTP bypass in testing mode
 ✅ Fixed: Backend syntax validation
 
+## 🔁 Recent Updates (21 May 2026)
+
+Summary of changes applied during the current sprint:
+- Standardised currency display to Indian Rupee (₹) and used `toLocaleString('en-IN')` for formatting across mobile and web where updated.
+- Prevented negative/`-` displays for loan liabilities in UI components (show positive liability values instead).
+- Removed Clerk integration remnants and restored traditional email/password auth (cleanup of pages and server utils completed earlier).
+- Fixed backend loan save hook and corrected non-blocking notification dispatch on loan events.
+
+Files updated in this pass (representative):
+- mobile/app/(tabs)/loans.tsx
+- mobile/app/(tabs)/index.tsx
+- mobile/app/(tabs)/profile.tsx
+- mobile/app/(tabs)/investments.tsx
+- web-portal/src/pages/CustomerPortal.jsx
+- web-portal/src/pages/AdminCRM.jsx
+
+Remaining work / recommended follow-ups:
+- Sweep the repo for any remaining `$` currency strings and convert to INR formatting (e.g. `web-portal/src/pages/LandingPage.jsx`, `web-portal/src/pages/AboutUs.jsx` found in a quick scan).
+- Run the web and mobile dev servers and manually verify pages with loans/investments for correct formatting and no negative values.
+- Run unit/integration tests (if available) and fix any regressions.
+- Commit and push the branch, then run CI to validate changes.
+
+If you want, I can run a repo-wide search and apply remaining currency fixes automatically, then run the dev servers and report back.
+
 ---
 
 ## 📞 Support
@@ -351,7 +375,7 @@ ISC
 
 ## 👨‍💻 Development
 
-**Last Updated**: May 18, 2026
+**Last Updated**: May 21, 2026
 
 ### Contributors
 - Backend: Notification system, Twilio/Email integration
