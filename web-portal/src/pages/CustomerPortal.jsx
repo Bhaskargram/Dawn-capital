@@ -13,6 +13,7 @@ import AnnouncementMarquee from '../components/AnnouncementMarquee';
 
 const API = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `http://${window.location.hostname}:5000/api`);
 const pc = '#C21B2F';
+const formatINR = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
 // ══════════ REUSABLE COMPONENTS ══════════
 
@@ -59,7 +60,7 @@ const DashboardTab = memo(({ user, portfolio, score, scoreColor, scoreLabel, not
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#8a8aa0', fontSize: '0.85rem', marginBottom: '12px', fontWeight: '700' }}>
             <div style={{ color: stat.color }}>{stat.icon}</div> {stat.label}
           </div>
-          <div style={{ fontSize: '2.2rem', fontWeight: '900', color: stat.color }}>${stat.value.toLocaleString()}</div>
+          <div style={{ fontSize: '2.2rem', fontWeight: '900', color: stat.color }}>{formatINR(stat.value)}</div>
         </GlassCard>
       ))}
     </div>
@@ -75,14 +76,14 @@ const DashboardTab = memo(({ user, portfolio, score, scoreColor, scoreLabel, not
                 {portfolio.investments.map(inv => (
                   <tr key={inv._id}>
                     <td><div style={{ fontWeight: '700' }}>{inv.type}</div><div style={{ fontSize: '0.75rem', color: '#555' }}>Fixed Return</div></td>
-                    <td style={{ color: '#22c55e', fontWeight: '700' }}>+${inv.amount.toLocaleString()}</td>
+                    <td style={{ color: '#22c55e', fontWeight: '700' }}>+{formatINR(inv.amount)}</td>
                     <td><span className="badge badge-approved">Active</span></td>
                   </tr>
                 ))}
                 {portfolio.loans.map(loan => (
                   <tr key={loan._id}>
                     <td><div style={{ fontWeight: '700' }}>Loan</div><div style={{ fontSize: '0.75rem', color: '#555' }}>{loan.loanId || loan._id.slice(-6)}</div></td>
-                    <td style={{ color: '#ef4444', fontWeight: '700' }}>-${loan.amount.toLocaleString()}</td>
+                    <td style={{ color: '#ef4444', fontWeight: '700' }}>{formatINR(loan.amount)}</td>
                     <td><span className={`badge badge-${loan.status === 'approved' || loan.status === 'active' ? 'approved' : 'pending'}`}>{loan.status}</span></td>
                   </tr>
                 ))}
@@ -146,7 +147,7 @@ const PortfolioTab = memo(({ portfolio }) => (
               <span style={{ fontWeight: '800', fontSize: '1.1rem' }}>{inv.type} Deposit</span>
               <span className="badge badge-approved">ACTIVE</span>
             </div>
-            <div style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '15px' }}>${inv.amount.toLocaleString()}</div>
+            <div style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '15px' }}>{formatINR(inv.amount)}</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
               <div><div style={{ fontSize: '0.7rem', color: '#8a8aa0', textTransform: 'uppercase' }}>Interest Rate</div><div style={{ fontWeight: '700' }}>{inv.interestRate}% APY</div></div>
               <div><div style={{ fontSize: '0.7rem', color: '#8a8aa0', textTransform: 'uppercase' }}>Maturity</div><div style={{ fontWeight: '700' }}>{new Date(inv.maturityDate).toLocaleDateString()}</div></div>
@@ -166,9 +167,9 @@ const PortfolioTab = memo(({ portfolio }) => (
               <span className={`badge badge-${loan.status === 'approved' || loan.status === 'active' ? 'approved' : 'pending'}`}>{loan.status?.toUpperCase()}</span>
             </div>
             <div style={{ color: '#8a8aa0', fontSize: '0.8rem', fontWeight: '800', marginBottom: '10px' }}>Loan ID: {loan.loanId || loan._id}</div>
-            <div style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '15px' }}>${loan.amount.toLocaleString()}</div>
+            <div style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '15px' }}>{formatINR(loan.amount)}</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
-              <div><div style={{ fontSize: '0.7rem', color: '#8a8aa0', textTransform: 'uppercase' }}>EMI</div><div style={{ fontWeight: '700' }}>${loan.emiAmount || '—'}</div></div>
+              <div><div style={{ fontSize: '0.7rem', color: '#8a8aa0', textTransform: 'uppercase' }}>EMI</div><div style={{ fontWeight: '700' }}>{loan.emiAmount != null ? formatINR(loan.emiAmount) : '—'}</div></div>
               <div><div style={{ fontSize: '0.7rem', color: '#8a8aa0', textTransform: 'uppercase' }}>Rate</div><div style={{ fontWeight: '700' }}>{loan.interestRate || '—'}%</div></div>
               <div><div style={{ fontSize: '0.7rem', color: '#8a8aa0', textTransform: 'uppercase' }}>Term</div><div style={{ fontWeight: '700' }}>{loan.durationMonths}mo</div></div>
             </div>
@@ -185,7 +186,7 @@ const ApplyTab = memo(({ loanForm, setLoanForm, handleApplyLoan }) => (
      <p style={{ color: '#8a8aa0', marginBottom: '30px' }}>Submit your details for a quick institutional credit review.</p>
      <GlassCard>
        <form onSubmit={handleApplyLoan}>
-         <FormField label="Requested Amount ($)"><input type="number" className="admin-input" value={loanForm.amount} onChange={e => setLoanForm({...loanForm, amount: e.target.value})} required /></FormField>
+         <FormField label="Requested Amount (₹)"><input type="number" className="admin-input" value={loanForm.amount} onChange={e => setLoanForm({...loanForm, amount: e.target.value})} required /></FormField>
          <FormField label="Loan Purpose">
            <select className="admin-input" value={loanForm.purpose} onChange={e => setLoanForm({...loanForm, purpose: e.target.value})} required>
              <option value="">Select Purpose...</option>
@@ -197,7 +198,7 @@ const ApplyTab = memo(({ loanForm, setLoanForm, handleApplyLoan }) => (
          </FormField>
          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
             <FormField label="Term (Months)"><input type="number" className="admin-input" value={loanForm.durationMonths} onChange={e => setLoanForm({...loanForm, durationMonths: e.target.value})} required /></FormField>
-            <FormField label="Monthly Income ($)"><input type="number" className="admin-input" value={loanForm.monthlyIncome} onChange={e => setLoanForm({...loanForm, monthlyIncome: e.target.value})} required /></FormField>
+            <FormField label="Monthly Income (₹)"><input type="number" className="admin-input" value={loanForm.monthlyIncome} onChange={e => setLoanForm({...loanForm, monthlyIncome: e.target.value})} required /></FormField>
          </div>
          <button type="submit" className="action-btn-primary" style={{ width: '100%', padding: '16px', marginTop: '10px', fontSize: '1rem' }}>Submit Loan Request</button>
        </form>

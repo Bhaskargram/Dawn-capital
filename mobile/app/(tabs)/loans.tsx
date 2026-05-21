@@ -13,6 +13,8 @@ export default function LoansScreen() {
   const [form, setForm] = useState({ amount: '', duration: '12', purpose: '', income: '' });
   const [msg, setMsg] = useState('');
 
+  const formatINR = (value) => `₹${Math.abs(Number(value || 0)).toLocaleString('en-IN')}`;
+
   const fetch = async () => {
     if (!token) return;
     try {
@@ -46,7 +48,7 @@ export default function LoansScreen() {
     }
   };
 
-  const total = loans.reduce((s, l) => s + (l.amount || 0), 0);
+  const total = loans.reduce((s, l) => s + Math.abs(l.amount || 0), 0);
 
   return (
     <SafeAreaView style={s.safe}>
@@ -67,7 +69,7 @@ export default function LoansScreen() {
           <View style={s.card}>
             <Text style={[s.cardTitle, { padding: 0, marginBottom: 20 }]}>Loan Application 📝</Text>
             <View style={s.fieldWrap}>
-              <Text style={s.fieldLabel}>Amount Required ($)</Text>
+              <Text style={s.fieldLabel}>Amount Required (₹)</Text>
               <TextInput style={s.fieldInput} value={form.amount} onChangeText={v => setForm({...form, amount: v})} keyboardType="numeric" placeholder="e.g. 5000" placeholderTextColor="#555" />
             </View>
             <View style={s.fieldWrap}>
@@ -79,7 +81,7 @@ export default function LoansScreen() {
               <TextInput style={s.fieldInput} value={form.purpose} onChangeText={v => setForm({...form, purpose: v})} placeholder="e.g. Business expansion" placeholderTextColor="#555" />
             </View>
             <View style={s.fieldWrap}>
-              <Text style={s.fieldLabel}>Monthly Income ($)</Text>
+              <Text style={s.fieldLabel}>Monthly Income (₹)</Text>
               <TextInput style={s.fieldInput} value={form.income} onChangeText={v => setForm({...form, income: v})} keyboardType="numeric" placeholder="e.g. 3000" placeholderTextColor="#555" />
             </View>
             <View style={{ flexDirection: 'row', gap: 10, marginTop: 10 }}>
@@ -95,7 +97,7 @@ export default function LoansScreen() {
           <>
             <View style={s.totalCard}>
               <Text style={s.totalLabel}>Total Outstanding</Text>
-              <Text style={s.totalValue}>${total.toLocaleString()}</Text>
+              <Text style={s.totalValue}>{formatINR(total)}</Text>
             </View>
 
             {loans.length > 0 ? loans.map((loan: any, i: number) => (
@@ -110,8 +112,8 @@ export default function LoansScreen() {
                   </View>
                 </View>
                 <View style={s.cardRow}>
-                  <View><Text style={s.label}>Amount</Text><Text style={[s.val, { color: loan.status === 'approved' ? 'white' : COLORS.textSecondary }]}>${loan.amount?.toLocaleString()}</Text></View>
-                  <View><Text style={s.label}>EMI</Text><Text style={s.val}>${loan.emiAmount?.toLocaleString() || '—'}/mo</Text></View>
+                  <View><Text style={s.label}>Amount</Text><Text style={[s.val, { color: loan.status === 'approved' ? 'white' : COLORS.textSecondary }]}>{formatINR(loan.amount)}</Text></View>
+                  <View><Text style={s.label}>EMI</Text><Text style={s.val}>{loan.emiAmount != null ? `${formatINR(loan.emiAmount)}/mo` : '—'}</Text></View>
                   <View><Text style={s.label}>Duration</Text><Text style={s.val}>{loan.durationMonths}mo</Text></View>
                 </View>
                 {loan.status === 'approved' && (

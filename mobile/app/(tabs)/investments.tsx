@@ -9,6 +9,7 @@ export default function InvestmentsScreen() {
   const { token } = useAuth();
   const [investments, setInvestments] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const formatINR = (value) => `₹${Math.abs(Number(value || 0)).toLocaleString('en-IN')}`;
 
   const fetch = async () => {
     if (!token) return;
@@ -32,7 +33,7 @@ export default function InvestmentsScreen() {
         {/* Total Card */}
         <View style={s.totalCard}>
           <Text style={s.totalLabel}>Total Invested</Text>
-          <Text style={s.totalValue}>${total.toLocaleString()}</Text>
+          <Text style={s.totalValue}>{formatINR(total)}</Text>
         </View>
 
         {/* List */}
@@ -45,7 +46,7 @@ export default function InvestmentsScreen() {
               <Text style={s.status}>Active</Text>
             </View>
             <View style={s.cardRow}>
-              <View><Text style={s.label}>Principal</Text><Text style={s.val}>${inv.amount?.toLocaleString()}</Text></View>
+              <View><Text style={s.label}>Principal</Text><Text style={s.val}>{formatINR(inv.amount)}</Text></View>
               <View><Text style={s.label}>Rate</Text><Text style={s.val}>{inv.interestRate}% APY</Text></View>
               <View><Text style={s.label}>Duration</Text><Text style={s.val}>{inv.durationMonths}mo</Text></View>
             </View>

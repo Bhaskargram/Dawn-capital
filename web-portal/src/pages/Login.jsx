@@ -29,6 +29,7 @@ export default function Login() {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [maintenance, setMaintenance] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Also check on load just in case
@@ -175,10 +176,12 @@ export default function Login() {
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', marginTop: '24px', color: '#8a8aa0', fontSize: '0.9rem' }}>
-            {mode === 'login' && <>Don't have an account? <button onClick={() => { setMode('signup'); setError(''); setSuccess(''); }} style={{ background: 'none', border: 'none', color: '#C21B2F', cursor: 'pointer', fontWeight: '700', fontSize: '0.9rem' }}>Sign Up</button></>}
-            {mode === 'signup' && <>Already have an account? <button onClick={() => { setMode('login'); setError(''); setSuccess(''); }} style={{ background: 'none', border: 'none', color: '#C21B2F', cursor: 'pointer', fontWeight: '700', fontSize: '0.9rem' }}>Sign In</button></>}
-            {mode === 'forgot' && <button onClick={() => { setMode('login'); setError(''); setSuccess(''); }} style={{ background: 'none', border: 'none', color: '#C21B2F', cursor: 'pointer', fontWeight: '700', fontSize: '0.9rem' }}>← Back to Sign In</button>}
+          <div style={{ marginTop: 22, display: 'grid', gap: 12 }}>
+            <div style={{ textAlign: 'center', marginTop: '24px', color: '#8a8aa0', fontSize: '0.9rem' }}>
+              {mode === 'login' && <>Don't have an account? <button onClick={() => { setMode('signup'); setError(''); setSuccess(''); }} style={{ background: 'none', border: 'none', color: '#C21B2F', cursor: 'pointer', fontWeight: '700', fontSize: '0.9rem' }}>Sign Up</button></>}
+              {mode === 'signup' && <>Already have an account? <button onClick={() => { setMode('login'); setError(''); setSuccess(''); }} style={{ background: 'none', border: 'none', color: '#C21B2F', cursor: 'pointer', fontWeight: '700', fontSize: '0.9rem' }}>Sign In</button></>}
+              {mode === 'forgot' && <button onClick={() => { setMode('login'); setError(''); setSuccess(''); }} style={{ background: 'none', border: 'none', color: '#C21B2F', cursor: 'pointer', fontWeight: '700', fontSize: '0.9rem' }}>← Back to Sign In</button>}
+            </div>
           </div>
         </motion.div>
       </div>

@@ -58,7 +58,7 @@ exports.register = async (req, res) => {
       <p style="color: #555;">Log in to your dashboard to get started.</p>
       <a href="${req.headers.origin || 'http://localhost:5173'}/login" style="display: inline-block; padding: 10px 20px; background-color: #C21B2F; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px;">Go to Dashboard</a>
     `;
-    sendEmail({ to: user.email, subject: 'Welcome to Dawn Capital!', html: welcomeHtml })
+    sendEmail({ email: user.email, subject: 'Welcome to Dawn Capital!', html: welcomeHtml })
       .catch(err => console.error('Welcome email failed (non-blocking):', err.message));
 
     const payload = { user: { id: user.id, role: user.role } };

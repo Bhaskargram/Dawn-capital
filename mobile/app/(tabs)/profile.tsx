@@ -12,6 +12,8 @@ export default function ProfileScreen() {
   const [changingPwd, setChangingPwd] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [showSupport, setShowSupport] = useState(false);
+
+  const formatINR = (value) => `₹${Math.abs(Number(value || 0)).toLocaleString('en-IN')}`;
   const [form, setForm] = useState({ name: user?.name || '', phone: (user as any)?.phone || '', address: (user as any)?.address || '' });
   const [kycForm, setKycForm] = useState({
     panNumber: (user as any)?.kyc?.panNumber || '',
@@ -222,8 +224,8 @@ export default function ProfileScreen() {
                 { label: 'Phone', value: (user as any)?.phone || '—' },
                 { label: 'KYC Status', value: (user as any)?.kycStatus || 'pending' },
                 { label: 'Credit Score', value: user?.creditScore ? String(user.creditScore) : '—' },
-                { label: 'Referral Wallet', value: `$${user?.referralWallet || 0}` },
-                { label: 'Wallet Balance', value: `$${(user as any)?.walletBalance?.toLocaleString() || '0'}` },
+                { label: 'Referral Wallet', value: formatINR(user?.referralWallet || 0) },
+                { label: 'Wallet Balance', value: formatINR((user as any)?.walletBalance || 0) },
               ].map((r, i, arr) => (
                 <View key={i} style={[s.row, i < arr.length - 1 && s.rowBorder]}>
                   <Text style={s.rowLabel}>{r.label}</Text>

@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 const API = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `http://${window.location.hostname}:5000/api`);
 const pc = '#C21B2F';
+const formatINR = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
 // ══════════ STABLE UI UTILITIES ══════════
 
@@ -76,8 +77,8 @@ const DashboardTab = memo(({ users, loans, investments, leads }) => {
         <StatCard icon={Users} label="Total Clients" value={totalUsers} trend={5.2} color="#3b82f6" />
         <StatCard icon={Clock} label="Pending Applications" value={pendingApplications} color="#fbbf24" />
         <StatCard icon={CheckCircle} label="Active Loans" value={activeLoans} trend={12.5} color="#22c55e" />
-        <StatCard icon={DollarSign} label="Loan Portfolio" value={`$${(totalLoanValue / 1000).toFixed(1)}K`} trend={8.3} color="#ef4444" />
-        <StatCard icon={TrendingUp} label="Investments" value={`$${(totalInvestmentValue / 1000).toFixed(1)}K`} trend={15.7} color="#10b981" />
+        <StatCard icon={DollarSign} label="Loan Portfolio" value={`₹${(totalLoanValue / 1000).toFixed(1)}K`} trend={8.3} color="#ef4444" />
+        <StatCard icon={TrendingUp} label="Investments" value={`₹${(totalInvestmentValue / 1000).toFixed(1)}K`} trend={15.7} color="#10b981" />
         <StatCard icon={MessageSquare} label="New Inquiries" value={newLeads} color="#8b5cf6" />
       </div>
 
@@ -91,7 +92,7 @@ const DashboardTab = memo(({ users, loans, investments, leads }) => {
                   <tr key={loan._id}>
                     <td><Briefcase size={16} style={{ color: pc }} /></td>
                     <td>{loan.user?.name || 'Unknown'}</td>
-                    <td>${loan.amount?.toLocaleString()}</td>
+                    <td>{formatINR(loan.amount)}</td>
                     <td><span className={`badge ${loan.status}`}>{loan.status}</span></td>
                     <td>{new Date(loan.createdAt).toLocaleDateString()}</td>
                   </tr>
@@ -239,7 +240,7 @@ const UsersTab = memo(({ users, onUpdate }) => {
                             <div><strong>Aadhaar:</strong> {user.kyc?.aadhaarNumber || '—'}</div>
                             <div><strong>DOB:</strong> {user.kyc?.dateOfBirth || '—'}</div>
                             <div><strong>Occupation:</strong> {user.kyc?.occupation || '—'}</div>
-                            <div><strong>Income:</strong> {user.kyc?.annualIncome ? `$${Number(user.kyc.annualIncome).toLocaleString()}` : '—'}</div>
+                            <div><strong>Income:</strong> {user.kyc?.annualIncome ? formatINR(user.kyc.annualIncome) : '—'}</div>
                           </div>
                           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '18px' }}>
                             {user.kyc?.panDocumentUrl && <a href={user.kyc.panDocumentUrl} target="_blank" rel="noreferrer" style={{ color: pc }}>PAN Document</a>}
@@ -310,7 +311,7 @@ const LoansTab = memo(({ loans, onDecision, setLoanForm }) => {
             {filteredLoans.filter(l => l.status === filterStatus || filterStatus === 'all').map(loan => (
               <tr key={loan._id}>
                 <td><div style={{ fontWeight: '800', color: pc }}>{loan.loanId || loan._id}</div><div style={{ fontSize: '0.75rem', color: '#555' }}>{loan._id}</div></td>
-                <td><div style={{ fontWeight: '700' }}>{loan.user?.name || 'Unknown'}</div><div style={{ fontSize: '0.8rem', color: '#555' }}>${loan.amount?.toLocaleString()}</div></td>
+                <td><div style={{ fontWeight: '700' }}>{loan.user?.name || 'Unknown'}</div><div style={{ fontSize: '0.8rem', color: '#555' }}>{formatINR(loan.amount)}</div></td>
                 <td><div style={{ fontWeight: '600' }}>{loan.purpose}</div><div style={{ fontSize: '0.75rem', color: '#8a8aa0' }}>{loan.durationMonths} Months</div></td>
                 <td><span className={`badge ${loan.status}`}>{loan.status}</span></td>
                 <td>
@@ -322,7 +323,7 @@ const LoansTab = memo(({ loans, onDecision, setLoanForm }) => {
                   ) : (
                     <div style={{ fontSize: '0.9rem' }}>
                       <div>Rate: {loan.interestRate || '—'}%</div>
-                      <div>EMI: ${loan.emiAmount?.toLocaleString() || '—'}</div>
+                      <div>EMI: {loan.emiAmount != null ? formatINR(loan.emiAmount) : '—'}</div>
                     </div>
                   )}
                 </td>
@@ -355,8 +356,8 @@ const ActiveLoansTab = memo(({ loans }) => (
             <tr key={loan._id}>
               <td><div style={{ fontWeight: '800', color: pc }}>{loan.loanId || loan._id}</div><div style={{ fontSize: '0.75rem', color: '#555' }}>{loan._id}</div></td>
               <td>{loan.user?.name}</td>
-              <td style={{ fontWeight: '700' }}>${loan.amount}</td>
-              <td>${loan.emiAmount}</td>
+              <td style={{ fontWeight: '700' }}>{formatINR(loan.amount)}</td>
+              <td>{formatINR(loan.emiAmount)}</td>
               <td><span className={`badge ${loan.status}`}>{loan.status}</span></td>
             </tr>
           ))}
@@ -386,7 +387,7 @@ const InvestmentsTab = memo(({ users, investments, onAdd, onDelete }) => {
             </select>
           </FormField>
           <Grid>
-            <FormField label="Amount ($)"><input type="number" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} className="admin-input" required /></FormField>
+            <FormField label="Amount (₹)"><input type="number" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} className="admin-input" required /></FormField>
             <FormField label="Rate (%)"><input type="number" step="0.1" value={form.rate} onChange={e => setForm({...form, rate: e.target.value})} className="admin-input" required /></FormField>
           </Grid>
           <FormField label="Duration (Months)"><input type="number" value={form.duration} onChange={e => setForm({...form, duration: e.target.value})} className="admin-input" required /></FormField>
@@ -402,7 +403,7 @@ const InvestmentsTab = memo(({ users, investments, onAdd, onDelete }) => {
                 <tr key={inv._id}>
                   <td>{inv.user?.name}</td>
                   <td>{inv.type}</td>
-                  <td style={{ color: '#22c55e', fontWeight: '700' }}>${inv.amount?.toLocaleString()}</td>
+                  <td style={{ color: '#22c55e', fontWeight: '700' }}>{formatINR(inv.amount)}</td>
                   <td><button onClick={() => onDelete(inv._id)} className="icon-btn danger"><Trash2 size={16} /></button></td>
                 </tr>
               ))}
