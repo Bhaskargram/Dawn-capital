@@ -11,7 +11,7 @@ export default function ContactUs() {
   const [error, setError] = useState('');
   const [contactInfo, setContactInfo] = useState({ email: 'support@dawncapital.com', phone: '+91 1800-DAWN-CAP', address: 'BKC, Mumbai, Maharashtra 400051', whatsapp: '' });
 
-  const API = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `http://${window.location.hostname}:5000/api`;
+  const API = import.meta.env.VITE_API_URL || 'https://api.dawncapital.online/api';
 
   useEffect(() => {
     axios.get(`${API}/config`)

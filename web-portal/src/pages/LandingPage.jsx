@@ -136,7 +136,7 @@ export default function LandingPage() {
   const [config, setConfig] = useState(null);
   const [maintenance, setMaintenance] = useState(null);
 
-  const API = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `http://${window.location.hostname}:5000/api`);
+  const API = import.meta.env.VITE_API_URL || 'https://api.dawncapital.online/api';
 
   useEffect(() => {
     const fetchConfig = async () => {

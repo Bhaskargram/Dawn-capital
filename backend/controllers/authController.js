@@ -9,11 +9,14 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // @route   POST api/auth/register
 exports.register = async (req, res) => {
-  const { name, email, password, phone, role, address, kyc = {} } = req.body;
+  const { name, username, email, password, phone, role, address, kyc = {} } = req.body;
 
   // ── Issue #1: Registration validation ──
   if (!name || name.trim().length < 2) {
     return res.status(400).json({ msg: 'Name is required and must be at least 2 characters' });
+  }
+  if (username && username.trim().length < 3) {
+    return res.status(400).json({ msg: 'Username must be at least 3 characters' });
   }
   if (!email || !EMAIL_RE.test(email)) {
     return res.status(400).json({ msg: 'A valid email address is required' });
@@ -25,10 +28,15 @@ exports.register = async (req, res) => {
   try {
     let user = await User.findOne({ email: email.toLowerCase().trim() });
     if (user) return res.status(400).json({ msg: 'User already exists with this email' });
+    if (username) {
+      const existingUsername = await User.findOne({ username: username.toLowerCase().trim() });
+      if (existingUsername) return res.status(400).json({ msg: 'Username is already taken' });
+    }
 
     const hasKyc = Boolean(kyc.panNumber || kyc.aadhaarNumber || kyc.dateOfBirth || kyc.occupation || kyc.annualIncome);
     user = new User({
       name: name.trim(),
+      username: username ? username.toLowerCase().trim() : undefined,
       email: email.toLowerCase().trim(),
       password,
       phone: phone || '',
@@ -56,7 +64,7 @@ exports.register = async (req, res) => {
       <h3 style="color: #333;">Welcome to Dawn Capital, ${name.trim()}!</h3>
       <p style="color: #555; line-height: 1.6;">We're thrilled to have you onboard. Your financial journey begins now. With Dawn Capital, you can track investments, apply for loans, and monitor your credit health all in one place.</p>
       <p style="color: #555;">Log in to your dashboard to get started.</p>
-      <a href="${req.headers.origin || 'http://localhost:5173'}/login" style="display: inline-block; padding: 10px 20px; background-color: #C21B2F; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px;">Go to Dashboard</a>
+      <a href="${req.headers.origin || 'https://dawncapital.online'}/login" style="display: inline-block; padding: 10px 20px; background-color: #C21B2F; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px;">Go to Dashboard</a>
     `;
     sendEmail({ email: user.email, subject: 'Welcome to Dawn Capital!', html: welcomeHtml })
       .catch(err => console.error('Welcome email failed (non-blocking):', err.message));
@@ -74,14 +82,20 @@ exports.register = async (req, res) => {
 
 // @route   POST api/auth/login
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
+  const { identifier, email, password } = req.body;
+  const loginKey = (identifier || email || '').trim();
 
-  if (!email || !password) {
-    return res.status(400).json({ msg: 'Email and password are required' });
+  if (!loginKey || !password) {
+    return res.status(400).json({ msg: 'Email/username and password are required' });
   }
 
   try {
-    let user = await User.findOne({ email: email.toLowerCase().trim() });
+    let user;
+    if (EMAIL_RE.test(loginKey)) {
+      user = await User.findOne({ email: loginKey.toLowerCase() });
+    } else {
+      user = await User.findOne({ username: loginKey.toLowerCase() });
+    }
     if (!user) return res.status(400).json({ msg: 'Invalid Credentials' });
     if (user.isBlocked) return res.status(403).json({ msg: 'Your account is blocked. Please contact support.' });
 
@@ -126,7 +140,7 @@ exports.forgotPassword = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     // Send Reset Email
-    const resetUrl = `${req.headers.origin || 'http://localhost:5173'}/reset-password/${resetToken}`;
+    const resetUrl = `${req.headers.origin || 'https://dawncapital.online'}/reset-password/${resetToken}`;
     const resetHtml = `
       <h3 style="color: #333;">Password Reset Request</h3>
       <p style="color: #555; line-height: 1.6;">You requested a password reset. Please click the button below to set a new password. This link will expire in 30 minutes.</p>

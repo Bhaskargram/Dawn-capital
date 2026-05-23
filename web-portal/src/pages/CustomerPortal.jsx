@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import CreditScoreMeter from '../components/CreditScoreMeter';
 import AnnouncementMarquee from '../components/AnnouncementMarquee';
 
-const API = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `http://${window.location.hostname}:5000/api`);
+const API = import.meta.env.VITE_API_URL || 'https://api.dawncapital.online/api';
 const pc = '#C21B2F';
 const formatINR = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 

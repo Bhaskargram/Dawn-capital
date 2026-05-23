@@ -61,7 +61,7 @@ function CustomSplashScreen() {
   return (
     <Animated.View exiting={FadeOut.duration(500)} style={s.splashContainer}>
       <Animated.View entering={ZoomIn.duration(800).springify()}>
-        <Image source={{ uri: 'https://dawnlogos.s3.amazonaws.com/dawn6.png' }} style={s.splashLogo} resizeMode="contain" />
+        <Image source={require('@/assets/images/dawn-logo-original.png')} style={s.splashLogo} resizeMode="contain" />
       </Animated.View>
     </Animated.View>
   );
@@ -103,6 +103,6 @@ export default function RootLayout() {
 
 const s = StyleSheet.create({
   splashContainer: { flex: 1, backgroundColor: COLORS.bg, justifyContent: 'center', alignItems: 'center' },
-  splashLogo: { width: 120, height: 120 },
+  splashLogo: { width: 200, height: 200 },
   bannerCard: { flexDirection: 'row', alignItems: 'center', padding: 16, borderRadius: 16, marginBottom: 8, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.3)', elevation: 8 }
 });

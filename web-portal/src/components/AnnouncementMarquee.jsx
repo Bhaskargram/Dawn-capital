@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Megaphone } from 'lucide-react';
 
-const API = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `http://${window.location.hostname}:5000/api`);
+const API = import.meta.env.VITE_API_URL || 'https://api.dawncapital.online/api';
 
 export default function AnnouncementMarquee({ target = 'both' }) {
   const [announcements, setAnnouncements] = useState([]);

@@ -10,15 +10,7 @@ const LAN_IP = '192.168.1.4';
 export const IS_TESTING_MODE = __DEV__; // This uses Expo's __DEV__ global flag
 
 const getBaseUrl = () => {
-  if (Platform.OS === 'web') {
-    // On web, detect if running on localhost or LAN
-    if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
-      return `http://${window.location.hostname}:5000/api`;
-    }
-    return 'http://localhost:5000/api';
-  }
-  if (Platform.OS === 'android') return `http://${LAN_IP}:5000/api`; // Physical device
-  return `http://${LAN_IP}:5000/api`; // iOS physical device
+  return 'https://api.dawncapital.online/api';
 };
 
 export const API_URL = getBaseUrl();

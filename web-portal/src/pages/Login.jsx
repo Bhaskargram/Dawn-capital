@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Building, Lock, Mail, ArrowRight, User, Phone, Eye, EyeOff, BookOpen } from 'lucide-react';
 import MaintenanceScreen from '../components/MaintenanceScreen';
 
-const API = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `http://${window.location.hostname}:5000/api`);
+const API = import.meta.env.VITE_API_URL || 'https://api.dawncapital.online/api';
 
 export default function Login() {
   const [searchParams] = useSearchParams();

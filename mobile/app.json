@@ -12,7 +12,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.dawncapital.app",
       "infoPlist": {
-        "NSAppTransportSecurity": { "NSAllowsArbitraryLoads": true }
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
       }
     },
     "android": {
@@ -48,6 +50,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a3235cac-3634-4c64-b780-d2ff01f15f84"
+      }
     }
   }
 }

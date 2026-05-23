@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator, Image } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'expo-router';
-import { COLORS, API_URL, IS_TESTING_MODE } from '@/constants/Config';
+import { COLORS, API_URL } from '@/constants/Config';
 import axios from 'axios';
 
 export default function LoginScreen() {
-  const [mode, setMode] = useState<'login' | 'signup' | 'forgot' | 'otp'>('login');
+  const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
   const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
@@ -21,7 +21,6 @@ export default function LoginScreen() {
     nomineeRelation: '',
   });
   const [password, setPassword] = useState('');
-  const [otp, setOtp] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -29,26 +28,6 @@ export default function LoginScreen() {
   const { login, register } = useAuth();
 
   const handleSubmit = async () => {
-    // OTP verification
-    if (mode === 'otp') {
-      if (!otp) {
-        setError('Please enter OTP');
-        return;
-      }
-      setLoading(true);
-      setError('');
-      try {
-        await axios.post(`${API_URL}/auth/verify-otp`, { email, otp });
-        setSuccess('OTP verified! Logging in...');
-        await login(email, password);
-      } catch (err: any) {
-        setError(err.response?.data?.msg || 'Invalid OTP');
-      }
-      setLoading(false);
-      return;
-    }
-
-    // Regular login
     if (mode === 'forgot' && !email) {
       setError('Please enter your email address');
       return;
@@ -71,21 +50,9 @@ export default function LoginScreen() {
         setLoading(false);
         return;
       }
-      if (mode === 'signup') await register(name, email, password, phone, address, kyc);
+      if (mode === 'signup') await register(name, username, email, password, phone, address, kyc);
       else {
-        // Login with OTP check
-        if (!IS_TESTING_MODE) {
-          // Send OTP for production
-          await axios.post(`${API_URL}/auth/send-otp`, { email, phone });
-          setSuccess('OTP sent to your phone!');
-          setMode('otp');
-          setLoading(false);
-          return;
-        } else {
-          // Testing mode: skip OTP
-          console.log('⚠️ TESTING MODE: OTP verification skipped');
-          await login(email, password);
-        }
+        await login(email, password);
       }
     } catch (err: any) {
       setError(err.response?.data?.msg || 'Something went wrong');
@@ -93,7 +60,7 @@ export default function LoginScreen() {
     setLoading(false);
   };
 
-  const switchMode = (m: 'login' | 'signup' | 'forgot') => { setMode(m); setError(''); setSuccess(''); setOtp(''); };
+  const switchMode = (m: 'login' | 'signup' | 'forgot') => { setMode(m); setError(''); setSuccess(''); };
 
   return (
     <KeyboardAvoidingView style={s.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -103,8 +70,8 @@ export default function LoginScreen() {
           <Image source={{ uri: 'https://dawnlogos.s3.amazonaws.com/dawn6.png' }} style={s.logoImg} resizeMode="contain" />
         </View>
 
-        <Text style={s.heading}>{mode === 'signup' ? 'Create Account' : mode === 'otp' ? 'Verify OTP' : mode === 'forgot' ? 'Reset Password' : 'Welcome Back'}</Text>
-        <Text style={s.subheading}>{mode === 'signup' ? 'Start your financial journey today' : mode === 'otp' ? 'Enter the code sent to your phone' : mode === 'forgot' ? 'Enter your email to get a reset link' : 'Sign in to your portfolio'}</Text>
+        <Text style={s.heading}>{mode === 'signup' ? 'Create Account' : mode === 'forgot' ? 'Reset Password' : 'Welcome Back'}</Text>
+        <Text style={s.subheading}>{mode === 'signup' ? 'Start your financial journey today' : mode === 'forgot' ? 'Enter your email to get a reset link' : 'Sign in to your portfolio'}</Text>
 
         {error ? <View style={s.errorBox}><Text style={s.errorText}>{error}</Text></View> : null}
         {success ? <View style={s.successBox}><Text style={s.successText}>{success}</Text></View> : null}
@@ -117,11 +84,19 @@ export default function LoginScreen() {
           </View>
         )}
 
-        {/* Email */}
+        {/* Email or Username */}
         <View style={s.inputWrap}>
-          <Text style={s.inputLabel}>Email Address</Text>
-          <TextInput style={s.input} value={email} onChangeText={setEmail} placeholder="you@example.com" placeholderTextColor="#555" keyboardType="email-address" autoCapitalize="none" />
+          <Text style={s.inputLabel}>{mode === 'forgot' ? 'Email Address' : 'Email or Username'}</Text>
+          <TextInput style={s.input} value={email} onChangeText={setEmail} placeholder={mode === 'forgot' ? 'you@example.com' : 'you@example.com or username'} placeholderTextColor="#555" keyboardType="email-address" autoCapitalize="none" />
         </View>
+
+        {/* Username */}
+        {mode === 'signup' && (
+          <View style={s.inputWrap}>
+            <Text style={s.inputLabel}>Username (optional)</Text>
+            <TextInput style={s.input} value={username} onChangeText={setUsername} placeholder="Choose a username" placeholderTextColor="#555" autoCapitalize="none" />
+          </View>
+        )}
 
         {/* Phone */}
         {mode === 'signup' && (
@@ -151,7 +126,7 @@ export default function LoginScreen() {
         )}
 
         {/* Password */}
-        {mode !== 'forgot' && mode !== 'otp' && (
+        {mode !== 'forgot' && (
           <View style={s.inputWrap}>
             <Text style={s.inputLabel}>Password</Text>
             <View style={{ position: 'relative' }}>
@@ -163,27 +138,6 @@ export default function LoginScreen() {
           </View>
         )}
 
-        {/* OTP Input */}
-        {mode === 'otp' && (
-          <View style={s.inputWrap}>
-            <Text style={s.inputLabel}>Enter OTP</Text>
-            <Text style={{ color: COLORS.textSecondary, fontSize: 13, marginBottom: 8 }}>Sent to {email}</Text>
-            <TextInput 
-              style={s.input} 
-              value={otp} 
-              onChangeText={setOtp} 
-              placeholder="000000" 
-              placeholderTextColor="#555" 
-              keyboardType="number-pad"
-              maxLength={6}
-            />
-            {IS_TESTING_MODE && (
-              <Text style={{ color: COLORS.warning, fontSize: 12, marginTop: 8, fontWeight: '600' }}>
-                🧪 Testing Mode: OTP check bypassed on login
-              </Text>
-            )}
-          </View>
-        )}
 
         {/* Forgot Link */}
         {mode === 'login' && (
@@ -194,13 +148,13 @@ export default function LoginScreen() {
 
         {/* Submit */}
         <TouchableOpacity style={s.btn} onPress={handleSubmit} disabled={loading} activeOpacity={0.8}>
-          {loading ? <ActivityIndicator color="white" /> : <Text style={s.btnText}>{mode === 'otp' ? 'Verify & Login' : mode === 'forgot' ? 'Send Reset Link' : mode === 'signup' ? 'Create Account' : 'Sign In'}</Text>}
+          {loading ? <ActivityIndicator color="white" /> : <Text style={s.btnText}>{mode === 'forgot' ? 'Send Reset Link' : mode === 'signup' ? 'Create Account' : 'Sign In'}</Text>}
         </TouchableOpacity>
 
         {/* Toggle */}
         <View style={s.toggleRow}>
           {mode === 'login' && <>
-            <Text style={s.toggleText}>Don't have an account?</Text>
+            <Text style={s.toggleText}>Don&apos;t have an account?</Text>
             <TouchableOpacity onPress={() => switchMode('signup')}><Text style={s.toggleLink}>Sign Up</Text></TouchableOpacity>
           </>}
           {mode === 'signup' && <>

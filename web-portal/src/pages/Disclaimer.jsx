@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export default function Disclaimer() {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
-  const API = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `http://${window.location.hostname}:5000/api`;
+  const API = import.meta.env.VITE_API_URL || 'https://api.dawncapital.online/api';
 
   useEffect(() => {
     axios.get(`${API}/config`)

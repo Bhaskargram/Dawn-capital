@@ -6,19 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Dawn Capital — Institutional precision financial services. Investments, loans, and credit solutions." />
     <meta name="theme-color" content="#0a0a14" />
+
+    <!-- OpenGraph Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Dawn Capital — Smart Finance for Every Need" />
+    <meta property="og:description" content="Institutional precision financial services. Investments, loans, insurance, and credit solutions across India." />
+    <meta property="og:image" content="/og-banner.png" id="og-image" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Dawn Capital — Smart Finance for Every Need" />
+    <meta property="og:site_name" content="Dawn Capital" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Dawn Capital — Smart Finance for Every Need" />
+    <meta name="twitter:description" content="Institutional precision financial services. Investments, loans, insurance, and credit solutions across India." />
+    <meta name="twitter:image" content="/og-banner.png" />
+
     <title>Dawn Capital</title>
     <script>
-      // Dynamically update favicon from API config
-      fetch((window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'http://' + window.location.hostname + ':5000') + '/api/config')
-        .then(r => r.json())
-        .then(c => {
-          if (c?.branding?.faviconUrl || c?.branding?.logoUrl) {
-            document.getElementById('dynamic-favicon').href = c.branding.faviconUrl || c.branding.logoUrl;
-          }
-          if (c?.branding?.companyName) {
-            document.title = c.branding.companyName;
-          }
-        }).catch(() => {});
+      // Dynamically update favicon and OG tags from API config
+      (function() {
+        var origin = window.location.origin;
+        // Make OG image absolute immediately
+        var ogImg = document.getElementById('og-image');
+        if (ogImg && ogImg.content.startsWith('/')) {
+          ogImg.content = origin + ogImg.content;
+        }
+        var twImg = document.querySelector('meta[name="twitter:image"]');
+        if (twImg && twImg.content.startsWith('/')) {
+          twImg.content = origin + twImg.content;
+        }
+
+        fetch('https://api.dawncapital.online' + '/api/config')
+          .then(function(r) { return r.json(); })
+          .then(function(c) {
+            if (c?.branding?.faviconUrl || c?.branding?.logoUrl) {
+              document.getElementById('dynamic-favicon').href = c.branding.faviconUrl || c.branding.logoUrl;
+            }
+            if (c?.branding?.companyName) {
+              document.title = c.branding.companyName;
+              var ogTitle = document.querySelector('meta[property="og:title"]');
+              if (ogTitle) ogTitle.content = c.branding.companyName + ' — Smart Finance for Every Need';
+              var twTitle = document.querySelector('meta[name="twitter:title"]');
+              if (twTitle) twTitle.content = c.branding.companyName + ' — Smart Finance for Every Need';
+              var ogSite = document.querySelector('meta[property="og:site_name"]');
+              if (ogSite) ogSite.content = c.branding.companyName;
+            }
+            if (c?.branding?.ogImageUrl) {
+              if (ogImg) ogImg.content = c.branding.ogImageUrl;
+              if (twImg) twImg.content = c.branding.ogImageUrl;
+            }
+          }).catch(function() {});
+      })();
     </script>
   </head>
   <body>

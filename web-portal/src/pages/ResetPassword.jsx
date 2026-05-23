@@ -4,7 +4,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
-const API = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `http://${window.location.hostname}:5000/api`);
+const API = import.meta.env.VITE_API_URL || 'https://api.dawncapital.online/api';
 
 export default function ResetPassword() {
   const { token } = useParams();
