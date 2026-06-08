@@ -46,6 +46,7 @@ app.use('/api/public', require('./routes/public'));
 app.use('/api/admin', require('./routes/adminOps'));
 app.use('/api/achievers', require('./routes/achievers'));
 app.use('/api/me', require('./routes/me'));
+app.use('/api/admin/accounting', require('./routes/accounting'));
 
 const PORT = process.env.PORT || 5000;
 

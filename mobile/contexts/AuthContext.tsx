@@ -73,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (identifier: string, password: string) => {
-    const res = await axios.post(`${API_URL}/auth/login`, { identifier, password });
+    const res = await axios.post(`${API_URL}/auth/login`, { identifier, email: identifier, password });
     await storeToken(res.data.token);
     setToken(res.data.token);
     const me = await axios.get(`${API_URL}/me`, { headers: { 'x-auth-token': res.data.token } });

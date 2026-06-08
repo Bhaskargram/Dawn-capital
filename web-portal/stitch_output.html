@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dawn Capital | Institutional-Grade Precision</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .glass-card {
+            background: rgba(31, 40, 51, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card:hover {
+            border-color: rgba(217, 4, 41, 0.3);
+            box-shadow: 0 0 20px rgba(217, 4, 41, 0.1);
+        }
+        .glow-red {
+            box-shadow: 0 0 15px rgba(217, 4, 41, 0.4);
+        }
+        .glow-red:hover {
+            box-shadow: 0 0 25px rgba(217, 4, 41, 0.6);
+        }
+        .bg-mesh {
+            background: radial-gradient(circle at 20% 30%, rgba(217, 4, 41, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(217, 4, 41, 0.05) 0%, transparent 40%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "outline": "#ae8885",
+                      "inverse-primary": "#bf0022",
+                      "surface-container": "#1f1f24",
+                      "surface-container-low": "#1a1b20",
+                      "on-tertiary-container": "#a4fef9",
+                      "on-primary-fixed": "#410005",
+                      "on-primary": "#68000e",
+                      "secondary-container": "#3e4753",
+                      "surface-dim": "#121317",
+                      "primary-fixed-dim": "#ffb3af",
+                      "tertiary-fixed": "#98f2ed",
+                      "error": "#ffb4ab",
+                      "background": "#121317",
+                      "on-secondary-container": "#adb6c4",
+                      "on-secondary": "#28313c",
+                      "surface-tint": "#ffb3af",
+                      "on-error": "#690005",
+                      "on-tertiary-fixed": "#00201f",
+                      "outline-variant": "#5d3f3d",
+                      "on-secondary-fixed": "#131c27",
+                      "on-tertiary": "#003735",
+                      "surface-container-high": "#292a2e",
+                      "secondary-fixed": "#dae3f2",
+                      "error-container": "#93000a",
+                      "inverse-surface": "#e3e2e8",
+                      "tertiary-fixed-dim": "#7bd6d1",
+                      "secondary": "#bec7d6",
+                      "inverse-on-surface": "#2f3035",
+                      "surface-variant": "#343439",
+                      "on-background": "#e3e2e8",
+                      "on-secondary-fixed-variant": "#3e4753",
+                      "tertiary-container": "#037976",
+                      "on-surface": "#e3e2e8",
+                      "tertiary": "#7bd6d1",
+                      "surface": "#121317",
+                      "surface-container-lowest": "#0d0e12",
+                      "on-primary-container": "#ffeae8",
+                      "on-surface-variant": "#e7bcba",
+                      "on-primary-fixed-variant": "#930018",
+                      "on-tertiary-fixed-variant": "#00504d",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-highest": "#343439",
+                      "surface-bright": "#38393e",
+                      "secondary-fixed-dim": "#bec7d6",
+                      "primary-fixed": "#ffdad7",
+                      "primary-container": "#d90429",
+                      "primary": "#ffb3af"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-max": "1280px",
+                      "gutter": "24px",
+                      "margin-desktop": "40px",
+                      "margin-mobile": "16px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "label-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "display-lg": ["Montserrat"],
+                      "headline-lg": ["Montserrat"],
+                      "label-sm": ["Inter"],
+                      "headline-md": ["Montserrat"],
+                      "headline-lg-mobile": ["Montserrat"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden bg-mesh">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10 shadow-md shadow-primary/5">
+<div class="flex justify-between items-center h-20 px-margin-desktop max-w-container-max mx-auto">
+<div class="font-display-lg text-headline-md font-bold text-primary tracking-tighter uppercase">Dawn Capital</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-body-md text-body-md text-primary border-b-2 border-primary pb-1" href="#">Lending</a>
+<a class="font-body-md text-body-md text-on-surface/80 hover:text-primary transition-colors" href="#">Invest</a>
+<a class="font-body-md text-body-md text-on-surface/80 hover:text-primary transition-colors" href="#">Digital</a>
+<a class="font-body-md text-body-md text-on-surface/80 hover:text-primary transition-colors" href="#">Track</a>
+<a class="font-body-md text-body-md text-on-surface/80 hover:text-primary transition-colors" href="#">FAQ</a>
+</div>
+<button class="bg-primary-container text-on-primary-container px-6 py-2.5 rounded-full font-label-md active:scale-95 transition-transform hover:opacity-90">
+                Request Callback
+            </button>
+</div>
+</nav>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[921px] flex items-center px-margin-desktop max-w-container-max mx-auto overflow-hidden">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center z-10">
+<div>
+<span class="text-primary font-label-sm uppercase tracking-[0.2em] mb-4 block">Institutional Liquidity</span>
+<h1 class="font-display-lg text-display-lg md:text-[64px] leading-tight mb-6">
+                        Empowering Your <br/><span class="text-primary">Financial Vision</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg mb-10">
+                        Dawn Capital delivers institutional-grade precision in digital finance and lending. We provide the architectural framework for your wealth to scale with speed and absolute security.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-primary-container text-white px-10 py-4 rounded-lg font-label-md glow-red active:scale-95 transition-all text-lg">
+                            Open Account
+                        </button>
+<button class="border border-white/20 bg-white/5 backdrop-blur-md px-10 py-4 rounded-lg font-label-md hover:bg-white/10 transition-all text-lg">
+                            View Solutions
+                        </button>
+</div>
+</div>
+<div class="relative">
+<div class="absolute -inset-10 bg-primary/20 blur-[120px] rounded-full opacity-30"></div>
+<img alt="Financial Visualization" class="rounded-2xl glass-card w-full shadow-2xl relative z-10 object-cover aspect-video" data-alt="A sophisticated 3D abstract visualization of global financial data streams flowing through a crystalline structure. The scene is dominated by deep obsidian tones with vibrant streaks of neon red light representing high-speed transactions. The overall aesthetic is premium, futuristic, and highly technical, perfectly capturing the essence of institutional fintech precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6wKjk7mPir_hEdc2Mr_TI7VtXlnJEA5EpGSntyBB16NSa38VjPkPrk7lwPRNWVIhwRuFy0es4Y7Ycv52G4qn6zpVz7fznxXTDlm49WuMB_Bsp2ME0I1g5ISfy0lwNVgRdMalwRPxHxzYh6SYb6AQTlRVgmcUKtAKt7Gs8XXXf-HESdM1be6D7s2rG4vKJX6dJdWRwtwqc9MhU6um8gjOlrL9RFLHDnhANNuz9JLJEqDw6WMJ_NmooCcd3yaBemkW7QMSCfA9A9po"/>
+</div>
+</div>
+</section>
+<!-- Services Section -->
+<section class="py-24 px-margin-desktop max-w-container-max mx-auto">
+<div class="text-center mb-16">
+<h2 class="font-display-lg text-headline-lg mb-4">Core Ecosystem</h2>
+<div class="w-16 h-1 bg-primary mx-auto"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Business Lending -->
+<div class="glass-card p-10 rounded-2xl group transition-all duration-500 hover:-translate-y-2">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-8 border border-primary/20 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">account_balance</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-4">Business Lending</h3>
+<p class="text-on-surface-variant font-body-md mb-6 leading-relaxed">
+                        Customized capital injections for enterprises seeking rapid expansion. High-velocity approval processes backed by deep liquidity pools.
+                    </p>
+<a class="text-primary font-label-md flex items-center gap-2 hover:gap-4 transition-all" href="#">
+                        Learn More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<!-- Investor Products -->
+<div class="glass-card p-10 rounded-2xl group transition-all duration-500 hover:-translate-y-2">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-8 border border-primary/20 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">monitoring</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-4">Investor Products</h3>
+<p class="text-on-surface-variant font-body-md mb-6 leading-relaxed">
+                        Exclusive access to high-yield institutional assets. Diversify your portfolio with data-driven alternative investment strategies.
+                    </p>
+<a class="text-primary font-label-md flex items-center gap-2 hover:gap-4 transition-all" href="#">
+                        Learn More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<!-- Digital Finance -->
+<div class="glass-card p-10 rounded-2xl group transition-all duration-500 hover:-translate-y-2">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-8 border border-primary/20 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">token</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-4">Digital Finance</h3>
+<p class="text-on-surface-variant font-body-md mb-6 leading-relaxed">
+                        Next-generation digital asset management and blockchain-integrated settlements. Borderless, secure, and instantaneous.
+                    </p>
+<a class="text-primary font-label-md flex items-center gap-2 hover:gap-4 transition-all" href="#">
+                        Learn More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Track & Request Panels -->
+<section class="py-24 relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 -skew-y-3 z-0"></div>
+<div class="px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start relative z-10">
+<!-- Track Application (Floating Panel) -->
+<div class="lg:col-span-5">
+<div class="glass-card p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]">timeline</span>
+</div>
+<h4 class="font-headline-md text-headline-md mb-2">Track Application</h4>
+<p class="text-on-surface-variant font-label-md mb-8 uppercase tracking-wider">Real-time Status Update</p>
+<div class="space-y-6">
+<div>
+<label class="block font-label-sm text-on-surface-variant mb-2 uppercase tracking-tighter">Application ID</label>
+<input class="w-full bg-black/20 border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 transition-all px-4 py-3 text-on-surface placeholder:text-on-surface/30" placeholder="DC-XXXX-XXXX" type="text"/>
+</div>
+<button class="w-full bg-white/10 hover:bg-white/20 border border-white/10 py-4 rounded-lg font-label-md text-white transition-all flex items-center justify-center gap-3 active:scale-[0.98]">
+<span class="material-symbols-outlined">radar</span> Track Progress
+                            </button>
+</div>
+<div class="mt-8 pt-6 border-t border-white/5 flex items-center gap-4">
+<div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+<p class="text-xs font-label-sm text-on-surface-variant">System Status: 100% Operational | Latency: 12ms</p>
+</div>
+</div>
+</div>
+<!-- Request Callback Form -->
+<div class="lg:col-span-7">
+<div class="glass-card p-10 rounded-3xl">
+<h3 class="font-headline-lg text-headline-lg mb-2">Consult an Analyst</h3>
+<p class="text-on-surface-variant mb-10">Scale your vision with a dedicated financial strategist. We'll reach out within 2 business hours.</p>
+<form class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
+<div class="relative group">
+<label class="block font-label-sm text-on-surface-variant mb-2 uppercase">Full Name</label>
+<input class="w-full bg-transparent border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 transition-all py-2 text-on-surface" type="text"/>
+</div>
+<div class="relative group">
+<label class="block font-label-sm text-on-surface-variant mb-2 uppercase">Email Address</label>
+<input class="w-full bg-transparent border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 transition-all py-2 text-on-surface" type="email"/>
+</div>
+<div class="relative group">
+<label class="block font-label-sm text-on-surface-variant mb-2 uppercase">Phone Number</label>
+<input class="w-full bg-transparent border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 transition-all py-2 text-on-surface" type="tel"/>
+</div>
+<div class="relative group">
+<label class="block font-label-sm text-on-surface-variant mb-2 uppercase">Loan Amount Target</label>
+<select class="w-full bg-transparent border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 transition-all py-2 text-on-surface appearance-none">
+<option class="bg-surface-container">Select Range</option>
+<option class="bg-surface-container">$1M - $5M</option>
+<option class="bg-surface-container">$5M - $20M</option>
+<option class="bg-surface-container">$20M+</option>
+</select>
+</div>
+<div class="md:col-span-2 pt-4">
+<button class="w-full bg-primary-container text-white py-4 rounded-xl font-headline-md glow-red hover:brightness-110 transition-all uppercase tracking-widest text-sm" type="submit">
+                                    Submit Enquiry
+                                </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ Section -->
+<section class="py-24 px-margin-desktop max-w-container-max mx-auto">
+<div class="max-w-3xl mx-auto">
+<h2 class="font-display-lg text-headline-lg text-center mb-16 italic">Insight &amp; Clarity</h2>
+<div class="space-y-4">
+<!-- FAQ 1 -->
+<div class="accordion-item glass-card rounded-xl overflow-hidden">
+<button class="w-full flex items-center justify-between p-6 text-left hover:bg-white/5 transition-colors" onclick="toggleAccordion(this)">
+<span class="font-headline-md text-body-lg">What are the minimum requirements for Business Lending?</span>
+<span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</button>
+<div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+<div class="p-6 pt-0 text-on-surface-variant border-t border-white/5">
+                                Our lending criteria focus on strong cash flow, clear scalability roadmap, and institutional-grade governance. Typical requirements include 24 months of audited financials and a minimum annual revenue of $2.5M.
+                            </div>
+</div>
+</div>
+<!-- FAQ 2 -->
+<div class="accordion-item glass-card rounded-xl overflow-hidden">
+<button class="w-full flex items-center justify-between p-6 text-left hover:bg-white/5 transition-colors" onclick="toggleAccordion(this)">
+<span class="font-headline-md text-body-lg">How secure are the Digital Asset management systems?</span>
+<span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</button>
+<div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+<div class="p-6 pt-0 text-on-surface-variant border-t border-white/5">
+                                We utilize multi-party computation (MPC) combined with cold-storage institutional vaults. Every transaction undergoes rigorous automated compliance checking and multi-sig authorization from our risk department.
+                            </div>
+</div>
+</div>
+<!-- FAQ 3 -->
+<div class="accordion-item glass-card rounded-xl overflow-hidden">
+<button class="w-full flex items-center justify-between p-6 text-left hover:bg-white/5 transition-colors" onclick="toggleAccordion(this)">
+<span class="font-headline-md text-body-lg">Can international investors access Dawn Capital products?</span>
+<span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</button>
+<div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+<div class="p-6 pt-0 text-on-surface-variant border-t border-white/5">
+                                Yes. We operate across 40+ jurisdictions. Depending on your region, specific investment vehicles are optimized for local tax and regulatory frameworks to ensure compliant global wealth management.
+                            </div>
+</div>
+</div>
+<!-- FAQ 4 -->
+<div class="accordion-item glass-card rounded-xl overflow-hidden">
+<button class="w-full flex items-center justify-between p-6 text-left hover:bg-white/5 transition-colors" onclick="toggleAccordion(this)">
+<span class="font-headline-md text-body-lg">What is the typical time-to-funding for large scale projects?</span>
+<span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</button>
+<div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+<div class="p-6 pt-0 text-on-surface-variant border-t border-white/5">
+                                Our "Fast-Track" institutional protocol aims for initial approval within 72 hours, with full disbursement typically occurring between 10 to 21 business days after final document verification.
+                            </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest w-full py-16 border-t border-white/5">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="space-y-6">
+<div class="font-display-lg text-headline-md font-bold text-primary">Dawn Capital</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    © 2024 Dawn Capital. <br/>Institutional-grade precision.
+                </p>
+</div>
+<div>
+<h5 class="font-label-md text-primary uppercase mb-6">Solutions</h5>
+<ul class="space-y-3">
+<li><a class="text-on-surface-variant hover:text-on-surface hover:translate-x-1 transition-all inline-block font-body-md" href="#">Business Lending</a></li>
+<li><a class="text-on-surface-variant hover:text-on-surface hover:translate-x-1 transition-all inline-block font-body-md" href="#">Investor Products</a></li>
+<li><a class="text-on-surface-variant hover:text-on-surface hover:translate-x-1 transition-all inline-block font-body-md" href="#">Digital Finance</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label-md text-primary uppercase mb-6">Legal</h5>
+<ul class="space-y-3">
+<li><a class="text-on-surface-variant hover:text-on-surface hover:translate-x-1 transition-all inline-block font-body-md" href="#">Privacy Policy</a></li>
+<li><a class="text-on-surface-variant hover:text-on-surface hover:translate-x-1 transition-all inline-block font-body-md" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label-md text-primary uppercase mb-6">Support</h5>
+<ul class="space-y-3">
+<li><a class="text-on-surface-variant hover:text-on-surface hover:translate-x-1 transition-all inline-block font-body-md" href="#">Contact Us</a></li>
+<li><a class="text-on-surface-variant hover:text-on-surface hover:translate-x-1 transition-all inline-block font-body-md" href="#">Support Desk</a></li>
+<li><a class="text-on-surface-variant hover:text-on-surface hover:translate-x-1 transition-all inline-block font-body-md" href="#">Global Locations</a></li>
+</ul>
+</div>
+</div>
+</footer>
+<script>
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('.material-symbols-outlined');
+            const isOpen = content.style.maxHeight !== '0px' && content.style.maxHeight !== '';
+
+            // Close all other accordions
+            document.querySelectorAll('.accordion-item div').forEach(div => {
+                div.style.maxHeight = '0px';
+            });
+            document.querySelectorAll('.accordion-item .material-symbols-outlined').forEach(i => {
+                i.style.transform = 'rotate(0deg)';
+            });
+
+            if (!isOpen) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.style.maxHeight = '0px';
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section > div').forEach(el => {
+            el.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+            observer.observe(el);
+        });
+    </script>
+</body></html>

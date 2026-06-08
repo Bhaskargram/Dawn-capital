@@ -10,6 +10,10 @@ const LAN_IP = '192.168.1.4';
 export const IS_TESTING_MODE = __DEV__; // This uses Expo's __DEV__ global flag
 
 const getBaseUrl = () => {
+  if (__DEV__) {
+    if (Platform.OS === 'web') return 'http://localhost:5000/api';
+    return `http://${LAN_IP}:5000/api`;
+  }
   return 'https://api.dawncapital.online/api';
 };
 

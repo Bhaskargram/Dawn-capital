@@ -7,7 +7,7 @@ import {
   Shield, MessageSquare, Briefcase, Save,
   CreditCard, Lock, Menu,
   Layout, BarChart3, Megaphone,
-  ArrowUpRight, ArrowDownLeft, DollarSign
+  ArrowUpRight, ArrowDownLeft, DollarSign, BookOpen
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -43,25 +43,42 @@ const Grid = ({ children, cols = 2 }) => (
 
 // ══════════ TAB COMPONENTS ══════════
 
-const StatCard = memo(({ icon: Icon, label, value, trend, color }) => (
-  <motion.div whileHover={{ transform: 'translateY(-5px)' }} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '16px', padding: '24px' }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-      <div>
-        <p style={{ fontSize: '0.85rem', color: '#8a8aa0', fontWeight: '600', margin: '0 0 12px 0' }}>{label}</p>
-        <h3 style={{ fontSize: '2rem', fontWeight: '900', margin: '0', color: color || 'white' }}>{value}</h3>
-        {trend && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px', color: trend > 0 ? '#22c55e' : '#ef4444', fontSize: '0.85rem', fontWeight: '700' }}>
-            {trend > 0 ? <ArrowUpRight size={16} /> : <ArrowDownLeft size={16} />}
-            {Math.abs(trend)}%
-          </div>
-        )}
+const StatCard = memo(({ icon: Icon, label, value, trend, color, dataPoints = [10, 25, 20, 45, 30, 50, 60] }) => {
+  const sparkline = (
+    <svg viewBox="0 0 100 30" style={{ width: '100%', height: '30px', marginTop: '15px' }}>
+      <polyline 
+        points={dataPoints.map((val, i) => `${(i / (dataPoints.length - 1)) * 100},${30 - (val / Math.max(...dataPoints)) * 30}`).join(' ')}
+        fill="none" 
+        stroke={color} 
+        strokeWidth="2" 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+      />
+    </svg>
+  );
+
+  return (
+    <motion.div whileHover={{ transform: 'translateY(-5px)', boxShadow: `0 10px 25px -5px ${color}30` }} style={{ background: 'linear-gradient(145deg, #0f172a 0%, #020617 100%)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '16px', padding: '24px', overflow: 'hidden', position: 'relative' }}>
+      <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '100px', height: '100px', background: `radial-gradient(circle, ${color}30 0%, transparent 70%)`, opacity: 0.5 }} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 1 }}>
+        <div>
+          <p style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: '600', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
+          <h3 style={{ fontSize: '2.2rem', fontWeight: '900', margin: '0', color: '#f8fafc' }}>{value}</h3>
+          {trend && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px', color: trend > 0 ? '#10b981' : '#ef4444', fontSize: '0.85rem', fontWeight: '700' }}>
+              {trend > 0 ? <ArrowUpRight size={16} /> : <ArrowDownLeft size={16} />}
+              {Math.abs(trend)}% <span style={{ color: '#64748b', fontWeight: '500' }}>vs last month</span>
+            </div>
+          )}
+        </div>
+        <div style={{ padding: '12px', borderRadius: '12px', background: `${color}15`, border: `1px solid ${color}30` }}>
+          <Icon size={24} color={color} />
+        </div>
       </div>
-      <div style={{ padding: '12px', borderRadius: '12px', background: `${color}20` }}>
-        <Icon size={24} color={color} />
-      </div>
-    </div>
-  </motion.div>
-));
+      {sparkline}
+    </motion.div>
+  );
+});
 
 const DashboardTab = memo(({ users, loans, investments, leads }) => {
   const totalUsers = users.length;
@@ -74,15 +91,15 @@ const DashboardTab = memo(({ users, loans, investments, leads }) => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '40px' }}>
-        <StatCard icon={Users} label="Total Clients" value={totalUsers} trend={5.2} color="#3b82f6" />
-        <StatCard icon={Clock} label="Pending Applications" value={pendingApplications} color="#fbbf24" />
-        <StatCard icon={CheckCircle} label="Active Loans" value={activeLoans} trend={12.5} color="#22c55e" />
-        <StatCard icon={DollarSign} label="Loan Portfolio" value={`₹${(totalLoanValue / 1000).toFixed(1)}K`} trend={8.3} color="#ef4444" />
-        <StatCard icon={TrendingUp} label="Investments" value={`₹${(totalInvestmentValue / 1000).toFixed(1)}K`} trend={15.7} color="#10b981" />
-        <StatCard icon={MessageSquare} label="New Inquiries" value={newLeads} color="#8b5cf6" />
+        <StatCard icon={Users} label="Total Clients" value={totalUsers} trend={5.2} color="#3b82f6" dataPoints={[10, 25, 20, 45, 30, 50, 60]} />
+        <StatCard icon={Clock} label="Pending Apps" value={pendingApplications} color="#fbbf24" dataPoints={[5, 12, 8, 15, 10, 20]} />
+        <StatCard icon={CheckCircle} label="Active Loans" value={activeLoans} trend={12.5} color="#22c55e" dataPoints={[20, 22, 28, 25, 35, 40]} />
+        <StatCard icon={DollarSign} label="Loan Portfolio" value={`₹${(totalLoanValue / 1000).toFixed(1)}K`} trend={8.3} color="#ef4444" dataPoints={[100, 150, 130, 200, 180, 250]} />
+        <StatCard icon={TrendingUp} label="Investments" value={`₹${(totalInvestmentValue / 1000).toFixed(1)}K`} trend={15.7} color="#10b981" dataPoints={[40, 60, 50, 80, 120, 150]} />
+        <StatCard icon={MessageSquare} label="New Inquiries" value={newLeads} color="#8b5cf6" dataPoints={[5, 8, 4, 12, 10, 18]} />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
         <SectionCard title="📊 Recent Activities">
           <div style={{ overflowX: 'auto' }}>
             <table className="admin-table">
@@ -754,36 +771,214 @@ const LegalTab = memo(({ config, setLocalConfig }) => (
   </Grid>
 ));
 
-const LeadsTab = memo(({ leads, onUpdateStatus, onDelete }) => (
-  <SectionCard title="📭 Inbound Inquiries">
-    <div style={{ overflowX: 'auto' }}>
-      <table className="admin-table">
-        <thead><tr><th>Date</th><th>Contact</th><th>Request</th><th>Status</th><th>Actions</th></tr></thead>
-        <tbody>
-          {leads.map(lead => (
-            <tr key={lead._id}>
-              <td>{new Date(lead.createdAt).toLocaleDateString()}</td>
-              <td><div style={{ fontWeight: '700' }}>{lead.name}</div><div style={{ fontSize: '0.8rem', color: '#8a8aa0' }}>{lead.email}</div></td>
-              <td><div style={{ fontWeight: '600' }}>{lead.loanAmount}</div><div style={{ fontSize: '0.75rem', color: '#555' }}>{lead.purpose}</div></td>
-              <td>
-                <select className="admin-input" style={{ width: 'auto', padding: '4px 8px' }} value={lead.status} onChange={e => onUpdateStatus(lead._id, e.target.value)}>
-                  {['new', 'contacted', 'qualified', 'converted', 'rejected'].map(s => <option key={s} value={s}>{s.toUpperCase()}</option>)}
-                </select>
-              </td>
-              <td><button onClick={() => onDelete(lead._id)} className="icon-btn danger"><Trash2 size={16} /></button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </SectionCard>
-));
+const LeadsTab = memo(({ leads, onUpdate, onCreate, onDelete }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [expandedLeadId, setExpandedLeadId] = useState(null);
+  const [editForms, setEditForms] = useState({});
+  const [showCreate, setShowCreate] = useState(false);
+  const [createForm, setCreateForm] = useState({ name: '', email: '', phone: '', loanAmount: '', funnelStage: 'New', priority: 'Medium' });
+
+  const filteredLeads = useMemo(() => {
+    return leads.filter(l => 
+      (l.name || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+      (l.email || '').toLowerCase().includes(searchTerm.toLowerCase())
+    ).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  }, [leads, searchTerm]);
+
+  return (
+    <SectionCard title="📈 Leads CRM">
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', gap: '12px' }}>
+        <div style={{ flex: 1, position: 'relative' }}>
+          <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#8a8aa0' }} />
+          <input 
+            type="text" 
+            placeholder="Search by name or email..." 
+            value={searchTerm} 
+            onChange={e => setSearchTerm(e.target.value)}
+            className="admin-input"
+            style={{ paddingLeft: '40px' }}
+          />
+        </div>
+        <button onClick={() => setShowCreate(!showCreate)} className="action-btn-primary" style={{ padding: '0 20px' }}>
+          {showCreate ? 'Cancel' : '+ Add New Lead'}
+        </button>
+      </div>
+
+      {showCreate && (
+        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '12px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <h3 style={{ margin: '0 0 15px 0' }}>Create New Lead</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+            <input className="admin-input" placeholder="Name" value={createForm.name} onChange={e => setCreateForm({...createForm, name: e.target.value})} />
+            <input className="admin-input" placeholder="Email" value={createForm.email} onChange={e => setCreateForm({...createForm, email: e.target.value})} />
+            <input className="admin-input" placeholder="Phone" value={createForm.phone} onChange={e => setCreateForm({...createForm, phone: e.target.value})} />
+            <input className="admin-input" type="number" placeholder="Expected Loan Amount" value={createForm.loanAmount} onChange={e => setCreateForm({...createForm, loanAmount: e.target.value})} />
+            <select className="admin-input" value={createForm.funnelStage} onChange={e => setCreateForm({...createForm, funnelStage: e.target.value})}>
+              <option value="New">New</option><option value="Attempted to Contact">Attempted to Contact</option><option value="In Discussion">In Discussion</option>
+              <option value="Document Collection">Document Collection</option><option value="Converted">Converted</option><option value="Lost">Lost</option>
+            </select>
+            <select className="admin-input" value={createForm.priority} onChange={e => setCreateForm({...createForm, priority: e.target.value})}>
+              <option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option>
+            </select>
+          </div>
+          <button onClick={() => { onCreate(createForm); setShowCreate(false); setCreateForm({ name: '', email: '', phone: '', loanAmount: '', funnelStage: 'New', priority: 'Medium' }); }} className="action-btn-primary" style={{ marginTop: '15px' }}>Save Lead</button>
+        </div>
+      )}
+
+      <div style={{ overflowX: 'auto' }}>
+        <table className="admin-table">
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Amount</th><th>Stage</th><th>Priority</th><th>Actions</th></tr></thead>
+          <tbody>
+            {filteredLeads.map(lead => {
+              const isExpanded = expandedLeadId === lead._id;
+              const form = editForms[lead._id] || {
+                name: lead.name || '', email: lead.email || '', phone: lead.phone || '',
+                loanAmount: lead.loanAmount || '', funnelStage: lead.funnelStage || 'New', priority: lead.priority || 'Medium'
+              };
+              const setFormField = (key, value) => setEditForms(prev => ({ ...prev, [lead._id]: { ...form, [key]: value } }));
+              return (
+                <React.Fragment key={lead._id}>
+                  <tr>
+                    <td><div style={{ fontWeight: '700' }}>{lead.name}</div><div style={{ fontSize: '0.8rem', color: '#555' }}>ID: {lead._id.slice(-6)}</div></td>
+                    <td>{lead.email}</td>
+                    <td>{lead.phone || '—'}</td>
+                    <td style={{ color: '#22c55e', fontWeight: 'bold' }}>₹{Number(lead.loanAmount || 0).toLocaleString()}</td>
+                    <td><span className="badge pending">{lead.funnelStage || 'New'}</span></td>
+                    <td>{lead.priority || 'Medium'}</td>
+                    <td>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button onClick={() => { setExpandedLeadId(isExpanded ? null : lead._id); setEditForms(prev => ({ ...prev, [lead._id]: form })); }} className="icon-btn primary">{isExpanded ? 'Hide' : 'Edit'}</button>
+                        <button onClick={() => onDelete(lead._id)} className="icon-btn danger">🗑️</button>
+                      </div>
+                    </td>
+                  </tr>
+                  {isExpanded && (
+                    <tr>
+                      <td colSpan="7" style={{ padding: '0' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                            <div><label style={{ fontSize: '0.8rem', color: '#8a8aa0' }}>Name</label><input className="admin-input" value={form.name} onChange={e => setFormField('name', e.target.value)} /></div>
+                            <div><label style={{ fontSize: '0.8rem', color: '#8a8aa0' }}>Email</label><input className="admin-input" value={form.email} onChange={e => setFormField('email', e.target.value)} /></div>
+                            <div><label style={{ fontSize: '0.8rem', color: '#8a8aa0' }}>Phone</label><input className="admin-input" value={form.phone} onChange={e => setFormField('phone', e.target.value)} /></div>
+                            <div><label style={{ fontSize: '0.8rem', color: '#8a8aa0' }}>Loan Amount</label><input className="admin-input" type="number" value={form.loanAmount} onChange={e => setFormField('loanAmount', e.target.value)} /></div>
+                            <div><label style={{ fontSize: '0.8rem', color: '#8a8aa0' }}>Stage</label>
+                              <select className="admin-input" value={form.funnelStage} onChange={e => setFormField('funnelStage', e.target.value)}>
+                                <option value="New">New</option><option value="Attempted to Contact">Attempted to Contact</option><option value="In Discussion">In Discussion</option>
+                                <option value="Document Collection">Document Collection</option><option value="Converted">Converted</option><option value="Lost">Lost</option>
+                              </select>
+                            </div>
+                            <div><label style={{ fontSize: '0.8rem', color: '#8a8aa0' }}>Priority</label>
+                              <select className="admin-input" value={form.priority} onChange={e => setFormField('priority', e.target.value)}>
+                                <option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option>
+                              </select>
+                            </div>
+                          </div>
+                          <button onClick={() => { onUpdate(lead._id, form); setExpandedLeadId(null); }} className="action-btn-primary" style={{ marginTop: '15px' }}>Save Changes</button>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              );
+            })}
+            {filteredLeads.length === 0 && <tr><td colSpan="7" style={{ textAlign: 'center', padding: '30px', color: '#555' }}>No leads found</td></tr>}
+          </tbody>
+        </table>
+      </div>
+    </SectionCard>
+  );
+});
+
+const AccountingTab = memo(() => {
+  const [entries, setEntries] = useState([]);
+  const [summary, setSummary] = useState({ totalIncome: 0, totalExpense: 0, netProfit: 0 });
+  const [form, setForm] = useState({ type: 'expense', category: '', amount: '', description: '' });
+  
+  const fetchAccounting = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const [entryRes, sumRes] = await Promise.all([
+        axios.get(`${API}/admin/accounting/ledger`, { headers: { 'x-auth-token': token } }),
+        axios.get(`${API}/admin/accounting/summary`, { headers: { 'x-auth-token': token } })
+      ]);
+      setEntries(entryRes.data);
+      setSummary(sumRes.data);
+    } catch (err) { console.error(err); }
+  };
+
+  useEffect(() => { fetchAccounting(); }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${API}/admin/accounting/ledger`, form, { headers: { 'x-auth-token': localStorage.getItem('token') } });
+      setForm({ type: 'expense', category: '', amount: '', description: '' });
+      fetchAccounting();
+    } catch (err) { alert('Failed to save entry'); }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${API}/admin/accounting/ledger/${id}`, { headers: { 'x-auth-token': localStorage.getItem('token') } });
+      fetchAccounting();
+    } catch (err) { alert('Failed to delete entry'); }
+  };
+
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '40px' }}>
+        <StatCard icon={TrendingUp} label="Total Income" value={`₹${(summary.totalIncome / 1000).toFixed(1)}K`} color="#22c55e" dataPoints={[10,20,30,25,40,50]} />
+        <StatCard icon={ArrowDownLeft} label="Total Expenses" value={`₹${(summary.totalExpense / 1000).toFixed(1)}K`} color="#ef4444" dataPoints={[5,10,8,15,12,20]} />
+        <StatCard icon={DollarSign} label="Net Profit" value={`₹${(summary.netProfit / 1000).toFixed(1)}K`} color={summary.netProfit >= 0 ? '#3b82f6' : '#ef4444'} dataPoints={[5,10,22,10,28,30]} />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
+        <SectionCard title="➕ Record Entry">
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <select className="admin-input" value={form.type} onChange={e => setForm({...form, type: e.target.value})} style={{ background: '#0F172A', color: 'white', border: '1px solid #1E293B', padding: '12px', borderRadius: '8px' }}>
+              <option value="expense">Expense</option>
+              <option value="income">Income</option>
+            </select>
+            <input type="text" className="admin-input" placeholder="Category (e.g. Salary, Marketing)" value={form.category} onChange={e => setForm({...form, category: e.target.value})} required />
+            <input type="number" className="admin-input" placeholder="Amount (₹)" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} required />
+            <input type="text" className="admin-input" placeholder="Description / Notes" value={form.description} onChange={e => setForm({...form, description: e.target.value})} />
+            <button type="submit" className="action-btn-primary"><Plus size={16} /> Save Entry</button>
+          </form>
+        </SectionCard>
+
+        <SectionCard title="📒 Ledger History">
+          <div style={{ overflowX: 'auto' }}>
+            <table className="admin-table">
+              <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>By</th><th>Action</th></tr></thead>
+              <tbody>
+                {entries.map(e => (
+                  <tr key={e._id}>
+                    <td>{new Date(e.date).toLocaleDateString()}</td>
+                    <td><span className={`badge ${e.type === 'income' ? 'active' : 'danger'}`}>{e.type.toUpperCase()}</span></td>
+                    <td>{e.category}</td>
+                    <td style={{ color: e.type === 'income' ? '#22c55e' : '#ef4444', fontWeight: 'bold' }}>₹{e.amount}</td>
+                    <td>{e.recordedBy?.name || 'Admin'}</td>
+                    <td><button onClick={() => handleDelete(e._id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={16} /></button></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </SectionCard>
+      </div>
+    </motion.div>
+  );
+});
 
 // ══════════ MAIN COMPONENT ══════════
 
 export default function AdminCRM() {
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activeTab, setActiveTab] = useState(localStorage.getItem('adminActiveTab') || 'dashboard');
+  
+  useEffect(() => {
+    localStorage.setItem('adminActiveTab', activeTab);
+  }, [activeTab]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
   const [loading, setLoading] = useState(true);
   const [allUsers, setAllUsers] = useState([]);
   const [allLoans, setAllLoans] = useState([]);
@@ -793,6 +988,16 @@ export default function AdminCRM() {
   const [config, setConfig] = useState(null);
   const [loanForm, setLoanFormState] = useState({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (mobile && sidebarOpen) setSidebarOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [sidebarOpen]);
 
   const setLoanForm = (id, key, val) => setLoanFormState(prev => ({...prev, [id]: {...prev[id], [key]: val}}));
 
@@ -818,6 +1023,10 @@ export default function AdminCRM() {
     } catch (err) {
       console.error(err);
       if (err.response?.status === 403) navigate('/customer');
+      if (err.response?.status === 401) {
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
     } finally {
       setLoading(false);
     }
@@ -922,9 +1131,16 @@ export default function AdminCRM() {
     } catch (err) { console.error(err); alert('Delete failed'); }
   };
 
-  const handleUpdateLead = async (id, status) => {
+  const handleCreateLead = async (leadData) => {
     try {
-      await axios.put(`${API}/admin/leads/${id}/status`, { status }, { headers: { 'x-auth-token': localStorage.getItem('token') } });
+      await axios.post(`${API}/admin/leads`, leadData, { headers: { 'x-auth-token': localStorage.getItem('token') } });
+      fetchData();
+    } catch (err) { console.error(err); alert('Failed to create lead'); }
+  };
+
+  const handleUpdateLead = async (id, updates) => {
+    try {
+      await axios.put(`${API}/admin/leads/${id}`, updates, { headers: { 'x-auth-token': localStorage.getItem('token') } });
       fetchData();
     } catch (err) { console.error(err); alert('Update failed'); }
   };
@@ -945,6 +1161,7 @@ export default function AdminCRM() {
     { id: 'active_loans', label: 'Portfolio', icon: <TrendingUp size={18} /> },
     { id: 'investments', label: 'Investments', icon: <DollarSign size={18} /> },
     { id: 'leads', label: 'Inquiries', icon: <MessageSquare size={18} /> },
+    { id: 'accounting', label: 'Accounting', icon: <BookOpen size={18} /> },
     { id: 'website', label: 'CMS/Content', icon: <Layout size={18} /> },
     { id: 'announcements', label: 'Announcements', icon: <Megaphone size={18} /> },
     { id: 'gateways', label: 'Gateways', icon: <CreditCard size={18} /> },
@@ -953,17 +1170,21 @@ export default function AdminCRM() {
   ];
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: '#0a0a0f', color: 'white' }}>
+    <div style={{ display: 'flex', height: '100vh', background: '#0a0a0f', color: 'white', position: 'relative' }}>
+      {/* Sidebar Overlay on Mobile */}
+      {isMobile && sidebarOpen && (
+        <div onClick={() => setSidebarOpen(false)} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 90 }} />
+      )}
       {/* Sidebar */}
-      <motion.div animate={{ width: sidebarOpen ? '280px' : '80px' }} style={{ background: '#111', borderRight: '1px solid rgba(255,255,255,0.05)', padding: '30px 15px', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 100 }}>
+      <motion.div animate={{ width: sidebarOpen ? '280px' : (isMobile ? '0px' : '80px') }} style={{ background: '#111', borderRight: '1px solid rgba(255,255,255,0.05)', padding: sidebarOpen || !isMobile ? '30px 15px' : '0', display: 'flex', flexDirection: 'column', position: isMobile ? 'absolute' : 'relative', height: '100%', zIndex: 100, overflow: 'hidden' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: sidebarOpen ? 'flex-start' : 'center', gap: '15px', marginBottom: '40px', overflow: 'hidden' }}>
           <img src={config?.branding?.logoUrl || 'https://dawnlogos.s3.amazonaws.com/dawn6.png'} alt="Dawn" style={{ width: sidebarOpen ? '48px' : '40px', height: sidebarOpen ? '48px' : '40px', objectFit: 'contain', transition: 'all 0.3s' }} />
         </div>
         
         <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {tabs.map(t => (
-            <button key={t.id} onClick={() => setActiveTab(t.id)} className={`nav-item ${activeTab === t.id ? 'active' : ''}`}>
-              {t.icon} {sidebarOpen && <span>{t.label}</span>}
+            <button key={t.id} onClick={() => { setActiveTab(t.id); if (isMobile) setSidebarOpen(false); }} className={`nav-item ${activeTab === t.id ? 'active' : ''}`}>
+              {t.icon} {sidebarOpen && <span style={{ whiteSpace: 'nowrap' }}>{t.label}</span>}
             </button>
           ))}
         </nav>
@@ -975,7 +1196,7 @@ export default function AdminCRM() {
 
       {/* Main Content */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        <header style={{ padding: '20px 40px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0a0a0f' }}>
+        <header style={{ padding: isMobile ? '15px' : '20px 40px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '15px' : '0', background: '#0a0a0f' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="icon-btn"><Menu size={24} /></button>
             <h2 style={{ fontSize: '1.3rem', fontWeight: '800', margin: 0 }}>{tabs.find(t => t.id === activeTab)?.label}</h2>
@@ -993,13 +1214,14 @@ export default function AdminCRM() {
           </div>
         </header>
 
-        <main style={{ flex: 1, overflowY: 'auto', padding: '40px' }}>
+        <main style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '20px 15px' : '40px' }}>
           {activeTab === 'dashboard' && <DashboardTab users={allUsers} loans={allLoans} investments={allInvestments} leads={allLeads} />}
           {activeTab === 'users' && <UsersTab users={allUsers} onUpdate={handleUpdateUser} />}
           {activeTab === 'loans' && <LoansTab loans={allLoans} onDecision={handleLoanDecision} loanForm={loanForm} setLoanForm={setLoanForm} />}
           {activeTab === 'active_loans' && <ActiveLoansTab loans={allLoans} />}
           {activeTab === 'investments' && <InvestmentsTab users={allUsers} investments={allInvestments} onAdd={handleAddInvestment} onDelete={handleDeleteInvestment} />}
-          {activeTab === 'leads' && <LeadsTab leads={allLeads} onUpdateStatus={handleUpdateLead} onDelete={handleDeleteLead} />}
+          {activeTab === 'leads' && <LeadsTab leads={allLeads} onUpdate={handleUpdateLead} onCreate={handleCreateLead} onDelete={handleDeleteLead} />}
+          {activeTab === 'accounting' && <AccountingTab />}
           {activeTab === 'website' && <WebsiteTab config={config} setLocalConfig={setLocalConfig} />}
           {activeTab === 'announcements' && <AnnouncementsTab announcements={allAnnouncements} onAddAnn={handleAddAnn} onDeleteAnn={handleDeleteAnn} />}
           {activeTab === 'gateways' && <GatewayTab config={config} setLocalConfig={setLocalConfig} />}

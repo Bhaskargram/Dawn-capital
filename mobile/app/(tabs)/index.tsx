@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, RefreshControl, Image, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, RefreshControl, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,7 +18,10 @@ function GlassCard({ children, style }: { children: React.ReactNode; style?: any
   return <View style={[s.glassCard, style]}>{children}</View>;
 }
 
+import { useRouter } from 'expo-router';
+
 export default function DashboardScreen() {
+  const router = useRouter();
   const { user, token, refreshUser } = useAuth();
   const [portfolio, setPortfolio] = useState<any>(null);
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -103,9 +106,11 @@ export default function DashboardScreen() {
               <ShieldCheck size={13} color={kycColor} />
               <Text style={[s.kycText, { color: kycColor }]}>KYC {kycStatus}</Text>
             </View>
-            <View style={s.avatar}>
+            <TouchableOpacity style={s.avatar} onPress={() => {
+              if (router) router.push('/(tabs)/profile');
+            }}>
               <Text style={s.avatarText}>{user?.name?.charAt(0)?.toUpperCase() || 'U'}</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </Animated.View>
 

@@ -292,7 +292,29 @@ router.get('/leads/all', adminAuth, async (req, res) => {
 router.put('/leads/:id/status', adminAuth, async (req, res) => {
   try {
     const { status } = req.body;
-    const lead = await Lead.findByIdAndUpdate(req.params.id, { $set: { status } }, { new: true });
+    let funnelStage = status;
+    let mappedStatus = 'new';
+    
+    if (funnelStage === 'New') mappedStatus = 'new';
+    else if (funnelStage === 'Attempted to Contact' || funnelStage === 'In Discussion') mappedStatus = 'contacted';
+    else if (funnelStage === 'Document Collection') mappedStatus = 'qualified';
+    else if (funnelStage === 'Converted') mappedStatus = 'converted';
+    else if (funnelStage === 'Lost') mappedStatus = 'rejected';
+
+    const lead = await Lead.findByIdAndUpdate(req.params.id, { $set: { status: mappedStatus, funnelStage } }, { new: true });
+    res.json(lead);
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   POST api/admin/leads
+// @desc    Create a new lead manually
+router.post('/leads', adminAuth, async (req, res) => {
+  try {
+    const { name, email, phone, loanAmount, purpose, message, funnelStage, priority, expectedLoanValue, notes } = req.body;
+    const newLead = new Lead({ name: name || 'Unknown', email: email || '', phone: phone || '', loanAmount: loanAmount || '0', purpose, message, funnelStage, priority, expectedLoanValue, notes });
+    const lead = await newLead.save();
     res.json(lead);
   } catch (err) {
     res.status(500).send('Server Error');
@@ -300,11 +322,11 @@ router.put('/leads/:id/status', adminAuth, async (req, res) => {
 });
 
 // @route   PUT api/admin/leads/:id
-// @desc    Update a lead status (alias)
+// @desc    Update a lead record fully
 router.put('/leads/:id', adminAuth, async (req, res) => {
   try {
-    const { status } = req.body;
-    const lead = await Lead.findByIdAndUpdate(req.params.id, { $set: { status } }, { new: true });
+    const updates = req.body;
+    const lead = await Lead.findByIdAndUpdate(req.params.id, { $set: updates }, { new: true });
     res.json(lead);
   } catch (err) {
     res.status(500).send('Server Error');
