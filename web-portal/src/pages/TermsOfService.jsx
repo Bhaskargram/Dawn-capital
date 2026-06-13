@@ -11,7 +11,7 @@ export default function TermsOfService() {
           
           <h3 style={{ color: 'white', marginBottom: '16px', marginTop: '32px' }}>1. Acceptance of Terms</h3>
           <p style={{ marginBottom: '24px' }}>
-            By accessing and using the Dawn Capital platform, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
+            By accessing and using the Dawn Multipurpose platform, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
           </p>
 
           <h3 style={{ color: 'white', marginBottom: '16px', marginTop: '32px' }}>2. Eligibility</h3>
@@ -36,7 +36,7 @@ export default function TermsOfService() {
 
           <h3 style={{ color: 'white', marginBottom: '16px', marginTop: '32px' }}>5. Limitation of Liability</h3>
           <p style={{ marginBottom: '24px' }}>
-            Dawn Capital shall not be liable for any indirect, incidental, or consequential damages arising from your use of our services or inability to access the platform.
+            Dawn Multipurpose shall not be liable for any indirect, incidental, or consequential damages arising from your use of our services or inability to access the platform.
           </p>
 
           <h3 style={{ color: 'white', marginBottom: '16px', marginTop: '32px' }}>6. Modifications</h3>

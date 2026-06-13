@@ -19,14 +19,14 @@ git add .
 ## Step 3: Create Initial Commit
 
 ```bash
-git commit -m "Initial commit: Dawn Capital Fintech Platform"
+git commit -m "Initial commit: Dawn Multipurpose Fintech Platform"
 ```
 
 ## Step 4: Create GitHub Repository
 
 1. Go to https://github.com/new
 2. Repository name: `dawn-capital` (or your preferred name)
-3. Description: "Dawn Capital - Fintech Platform for Loans & Investments"
+3. Description: "Dawn Multipurpose - Fintech Platform for Loans & Investments"
 4. Choose: Public or Private
 5. Do NOT initialize with README (we'll push our existing one)
 6. Click "Create repository"

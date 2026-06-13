@@ -84,7 +84,7 @@ export default function Login() {
       {/* Left branding */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '60px', position: 'relative', zIndex: 10 }}>
         <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', marginBottom: '50px' }}>
-          <img src="https://dawnlogos.s3.amazonaws.com/dawn6.png" alt="Dawn Capital" style={{ height: '55px', width: 'auto', objectFit: 'contain' }} />
+          <img src="https://dawnlogos.s3.amazonaws.com/dawn6.png" alt="Dawn Multipurpose" style={{ height: '55px', width: 'auto', objectFit: 'contain' }} />
         </Link>
         <h1 style={{ fontSize: '3rem', fontWeight: '900', color: 'white', lineHeight: '1.1', marginBottom: '20px', letterSpacing: '-0.03em' }}>
           {mode === 'signup' ? 'Start your\nfinancial journey.' : mode === 'forgot' ? 'Forgot your\npassword?' : 'Welcome back to\nyour financial hub.'}
@@ -95,7 +95,7 @@ export default function Login() {
         
         {/* How to use link */}
         <Link to="/how-to-use" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#38bdf8', textDecoration: 'none', fontWeight: '600', width: 'fit-content', padding: '12px 20px', background: 'rgba(56,189,248,0.1)', borderRadius: '30px', border: '1px solid rgba(56,189,248,0.2)' }}>
-          <BookOpen size={18} /> How to Use Dawn Capital
+          <BookOpen size={18} /> How to Use Dawn Multipurpose
         </Link>
       </div>
 

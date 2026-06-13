@@ -202,7 +202,7 @@ export default function LandingPage() {
   const contact = config?.contact || {};
   const systemMode = config?.system_mode || config?.systemMode;
   const primary = branding.primaryColor || '#d90429';
-  const companyName = branding.companyName || 'Dawn Capital';
+  const companyName = branding.companyName || 'Dawn Multipurpose';
   const services = lp.services?.length ? lp.services : DEFAULT_SERVICES;
   const faq = lp.faq?.length ? lp.faq : DEFAULT_FAQ;
   const heroImage = lp.heroImageUrl || lp.heroImage || branding.heroImage || DEFAULT_HERO_IMAGE;
@@ -276,7 +276,7 @@ export default function LandingPage() {
             <h2>Capital, credit, and operating tools for ambitious teams.</h2>
           </div>
           <p>
-            {lp.aboutUs || 'Dawn Capital combines lending workflows, investment records, CRM, KYC verification, and wallet ledgers in one configurable financial ecosystem.'}
+            {lp.aboutUs || 'Dawn Multipurpose combines lending workflows, investment records, CRM, KYC verification, and wallet ledgers in one configurable financial ecosystem.'}
           </p>
         </motion.section>
 

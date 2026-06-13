@@ -187,7 +187,7 @@ const loan = {
 cd /path/to/down-multipurpose
 git init
 git add .
-git commit -m "Initial commit: Dawn Capital"
+git commit -m "Initial commit: Dawn Multipurpose"
 git remote add origin https://github.com/YOUR_USERNAME/dawn-capital.git
 git push -u origin main
 ```

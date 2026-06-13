@@ -205,9 +205,9 @@ export default function ProfileScreen() {
           </View>
         ) : showAbout ? (
           <View style={s.card}>
-            <Text style={s.cardTitle}>About Dawn Capital</Text>
+            <Text style={s.cardTitle}>About Dawn Multipurpose</Text>
             <View style={s.fieldWrap}>
-              <Text style={{ color: 'white', fontSize: 14, lineHeight: 22 }}>Dawn Capital is a leading financial services firm dedicated to empowering individuals and businesses with robust investment opportunities and accessible credit solutions.</Text>
+              <Text style={{ color: 'white', fontSize: 14, lineHeight: 22 }}>Dawn Multipurpose is a leading financial services firm dedicated to empowering individuals and businesses with robust investment opportunities and accessible credit solutions.</Text>
             </View>
             <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
               <TouchableOpacity style={[s.actionBtn, { backgroundColor: 'transparent', borderWidth: 1, borderColor: COLORS.cardBorder }]} onPress={() => setShowAbout(false)}>
@@ -274,7 +274,7 @@ export default function ProfileScreen() {
           <Text style={s.logoutText}>Sign Out</Text>
         </TouchableOpacity>
 
-        <Text style={s.version}>Dawn Capital v1.0.0</Text>
+        <Text style={s.version}>Dawn Multipurpose v1.0.0</Text>
         <View style={{ height: 30 }} />
       </ScrollView>
     </SafeAreaView>

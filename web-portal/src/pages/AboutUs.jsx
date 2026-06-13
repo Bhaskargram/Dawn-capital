@@ -22,7 +22,7 @@ export default function AboutUs() {
             transition={{ delay: 0.1 }}
             style={{ fontSize: '1.25rem', color: '#8a8aa0', maxWidth: '700px', margin: '0 auto', lineHeight: '1.7' }}
           >
-            Dawn Capital is a premier financial technology firm dedicated to providing accessible, transparent, and innovative lending solutions for everyone.
+            Dawn Multipurpose is a premier financial technology firm dedicated to providing accessible, transparent, and innovative lending solutions for everyone.
           </motion.p>
         </div>
       </section>
@@ -62,7 +62,7 @@ export default function AboutUs() {
           <div>
             <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '24px' }}>Our Story</h2>
             <p style={{ color: '#8a8aa0', marginBottom: '20px', fontSize: '1.1rem' }}>
-              Founded in 2023, Dawn Capital emerged from a simple observation: traditional banking was too slow and often inaccessible to those who needed it most.
+              Founded in 2023, Dawn Multipurpose emerged from a simple observation: traditional banking was too slow and often inaccessible to those who needed it most.
             </p>
             <p style={{ color: '#8a8aa0', marginBottom: '32px', fontSize: '1.1rem' }}>
               We've since helped thousands of individuals and small businesses secure the funding they need to grow, thrive, and achieve their dreams. Our platform is built for speed, fairness, and simplicity.
@@ -84,7 +84,7 @@ export default function AboutUs() {
       <section style={{ padding: '100px 20px', textAlign: 'center' }}>
         <div className="glass-card" style={{ maxWidth: '900px', margin: '0 auto', padding: '60px 40px', background: 'linear-gradient(135deg, rgba(194, 27, 47, 0.1) 0%, rgba(26, 26, 46, 0.1) 100%)' }}>
           <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '16px' }}>Join the Financial Revolution</h2>
-          <p style={{ color: '#8a8aa0', marginBottom: '32px', fontSize: '1.1rem' }}>Experience the future of lending today with Dawn Capital.</p>
+          <p style={{ color: '#8a8aa0', marginBottom: '32px', fontSize: '1.1rem' }}>Experience the future of lending today with Dawn Multipurpose.</p>
           <Link to="/login?mode=signup" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
             Get Started Now <ArrowRight size={20} />
           </Link>

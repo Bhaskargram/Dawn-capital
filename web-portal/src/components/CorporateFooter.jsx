@@ -21,7 +21,7 @@ export default function CorporateFooter() {
 
   const branding = config?.branding || {};
   const contact = config?.contact || {};
-  const companyName = branding.companyName || 'Dawn Capital';
+  const companyName = branding.companyName || 'Dawn Multipurpose';
   const primary = branding.primaryColor || '#e0002a';
 
   return (

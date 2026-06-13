@@ -9,7 +9,7 @@ export default function ContactUs() {
   const [sent, setSent] = useState(false);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
-  const [contactInfo, setContactInfo] = useState({ email: 'support@dawncapital.com', phone: '+91 1800-DAWN-CAP', address: 'BKC, Mumbai, Maharashtra 400051', whatsapp: '' });
+  const [contactInfo, setContactInfo] = useState({ email: 'support@dawncapital.com', phone: '+91 1800-DAWN-MULTI', address: 'BKC, Mumbai, Maharashtra 400051', whatsapp: '' });
 
   const API = import.meta.env.VITE_API_URL || 'https://api.dawncapital.online/api';
 

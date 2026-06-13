@@ -20,7 +20,7 @@ const SystemConfigSchema = new mongoose.Schema({
     primaryColor: { type: String, default: '#C21B2F' },
     secondaryColor: { type: String, default: '#333333' },
     faviconUrl: { type: String, default: '' },
-    companyName: { type: String, default: 'Dawn Capital' }
+    companyName: { type: String, default: 'Dawn Multipurpose' }
   },
   contact: {
     email: { type: String, default: 'support@dawncapital.online' },
@@ -113,7 +113,7 @@ const SystemConfigSchema = new mongoose.Schema({
     mailgunApiKey: { type: String, default: '' },
     mailgunDomain: { type: String, default: '' },
     fromEmail: { type: String, default: 'noreply@dawncapital.com' },
-    fromName: { type: String, default: 'Dawn Capital' }
+    fromName: { type: String, default: 'Dawn Multipurpose' }
   },
   // SMS Gateway Configuration
   smsGateway: {
@@ -138,11 +138,11 @@ const SystemConfigSchema = new mongoose.Schema({
     heroTitle: { type: String, default: 'Institutional Precision. Global Reach.' },
     heroSubtitle: { type: String, default: 'Comprehensive financial solutions for individuals and enterprises.' },
     heroImageUrl: { type: String, default: '' },
-    aboutUs: { type: String, default: 'Dawn Capital stands as a cornerstone of the global financial landscape.' },
+    aboutUs: { type: String, default: 'Dawn Multipurpose stands as a cornerstone of the global financial landscape.' },
     services: [{ title: String, description: String, icon: String }],
     faq: [{ question: String, answer: String }],
     ctaTitle: { type: String, default: 'Ready to Transform Your Financial Future?' },
-    ctaSubtitle: { type: String, default: 'Join thousands of satisfied clients who trust Dawn Capital.' }
+    ctaSubtitle: { type: String, default: 'Join thousands of satisfied clients who trust Dawn Multipurpose.' }
   },
   legals: {
     termsOfService: { type: String, default: 'Terms of Service...' },

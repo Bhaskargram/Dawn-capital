@@ -37,7 +37,7 @@ const DashboardTab = memo(({ user, portfolio, score, scoreColor, scoreLabel, not
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px', flexWrap: 'wrap', gap: '20px' }}>
       <div>
         <h1 style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '6px' }}>Dashboard</h1>
-        <p style={{ color: '#8a8aa0' }}>Overview of your financial standing at Dawn Capital.</p>
+        <p style={{ color: '#8a8aa0' }}>Overview of your financial standing at Dawn Multipurpose.</p>
       </div>
       
       <CreditScoreMeter score={score} lastUpdated={user?.updatedAt} />
@@ -414,12 +414,12 @@ const SupportTab = memo(() => (
 
 const AboutUsTab = memo(() => (
   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: '800px', margin: '0 auto' }}>
-    <h1 style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '10px' }}>About Dawn Capital</h1>
+    <h1 style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '10px' }}>About Dawn Multipurpose</h1>
     <GlassCard>
       <div style={{ lineHeight: '1.8', color: '#e2e8f0', fontSize: '1.05rem' }}>
-        <p style={{ marginBottom: '15px' }}>Dawn Capital is a leading financial services firm dedicated to empowering individuals and businesses with robust investment opportunities and accessible credit solutions.</p>
+        <p style={{ marginBottom: '15px' }}>Dawn Multipurpose is a leading financial services firm dedicated to empowering individuals and businesses with robust investment opportunities and accessible credit solutions.</p>
         <p style={{ marginBottom: '15px' }}>With a commitment to transparency, rapid processing, and personalized financial planning, we strive to build long-lasting relationships with our clients worldwide.</p>
-        <p>Our core values are integrity, innovation, and client-centricity. Whether you're applying for a personal loan, business capital, or growing your wealth through our investment portfolios, Dawn Capital is your trusted partner.</p>
+        <p>Our core values are integrity, innovation, and client-centricity. Whether you're applying for a personal loan, business capital, or growing your wealth through our investment portfolios, Dawn Multipurpose is your trusted partner.</p>
       </div>
     </GlassCard>
   </motion.div>

@@ -6,7 +6,7 @@ const SystemConfig = require('../models/SystemConfig');
 const buildBaseTemplate = (config, bodyContent) => {
   const primaryColor = config?.branding?.primaryColor || '#C21B2F';
   const logoUrl = config?.branding?.logoUrl || 'https://dawnlogos.s3.amazonaws.com/dawn6.png';
-  const companyName = config?.branding?.companyName || 'Dawn Capital';
+  const companyName = config?.branding?.companyName || 'Dawn Multipurpose';
   const year = new Date().getFullYear();
 
   return `
@@ -182,7 +182,7 @@ const sendEmail = async (options, retryCount = 0) => {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
           fromEmail: process.env.EMAIL_FROM,
-          fromName: config?.branding?.companyName || 'Dawn Capital'
+          fromName: config?.branding?.companyName || 'Dawn Multipurpose'
         };
 
     if (!emailCfg.provider || emailCfg.provider === 'none' || !emailCfg.host || !emailCfg.user) {
@@ -209,7 +209,7 @@ const sendEmail = async (options, retryCount = 0) => {
     const fullHtml = buildBaseTemplate(config, htmlContent);
 
     const message = {
-      from: `${emailCfg.fromName || 'Dawn Capital'} <${emailCfg.fromEmail || 'noreply@dawncapital.online'}>`,
+      from: `${emailCfg.fromName || 'Dawn Multipurpose'} <${emailCfg.fromEmail || 'noreply@dawncapital.online'}>`,
       to: options.to,
       subject: options.subject,
       html: fullHtml

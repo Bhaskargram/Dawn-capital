@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Dawn Capital",
+    "name": "Dawn Multipurpose",
     "slug": "dawn-capital",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "dawncapital",
+    "scheme": "dawnmultipurpose",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {

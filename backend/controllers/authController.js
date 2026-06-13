@@ -61,12 +61,12 @@ exports.register = async (req, res) => {
 
     // ── Issue #2: Fire-and-forget welcome email ──
     const welcomeHtml = `
-      <h3 style="color: #333;">Welcome to Dawn Capital, ${name.trim()}!</h3>
-      <p style="color: #555; line-height: 1.6;">We're thrilled to have you onboard. Your financial journey begins now. With Dawn Capital, you can track investments, apply for loans, and monitor your credit health all in one place.</p>
+      <h3 style="color: #333;">Welcome to Dawn Multipurpose, ${name.trim()}!</h3>
+      <p style="color: #555; line-height: 1.6;">We're thrilled to have you onboard. Your financial journey begins now. With Dawn Multipurpose, you can track investments, apply for loans, and monitor your credit health all in one place.</p>
       <p style="color: #555;">Log in to your dashboard to get started.</p>
       <a href="https://dawncapital.online/login" style="display: inline-block; padding: 10px 20px; background-color: #C21B2F; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px;">Go to Dashboard</a>
     `;
-    sendEmail({ email: user.email, subject: 'Welcome to Dawn Capital!', html: welcomeHtml })
+    sendEmail({ email: user.email, subject: 'Welcome to Dawn Multipurpose!', html: welcomeHtml })
       .catch(err => console.error('Welcome email failed (non-blocking):', err.message));
 
     const payload = { user: { id: user.id, role: user.role } };
@@ -148,7 +148,7 @@ exports.forgotPassword = async (req, res) => {
       <p style="color: #999; font-size: 12px; margin-top: 20px;">If you did not request this, please ignore this email.</p>
     `;
     // Fire-and-forget for reset email too
-    sendEmail({ to: user.email, subject: 'Password Reset Request - Dawn Capital', html: resetHtml })
+    sendEmail({ to: user.email, subject: 'Password Reset Request - Dawn Multipurpose', html: resetHtml })
       .catch(err => console.error('Reset email failed (non-blocking):', err.message));
 
     res.json({ msg: 'Password reset link has been sent to your email' });
