@@ -32,7 +32,7 @@ const FormField = memo(({ label, children }) => (
 
 // ══════════ TAB COMPONENTS ══════════
 
-const DashboardTab = memo(({ user, portfolio, score, scoreColor, scoreLabel, notifications }) => (
+const DashboardTab = memo(({ user, portfolio, score, scoreColor, scoreLabel, notifications, investmentPlans, achievers }) => (
   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px', flexWrap: 'wrap', gap: '20px' }}>
       <div>
@@ -82,9 +82,12 @@ const DashboardTab = memo(({ user, portfolio, score, scoreColor, scoreLabel, not
                 ))}
                 {portfolio.loans.map(loan => (
                   <tr key={loan._id}>
-                    <td><div style={{ fontWeight: '700' }}>Loan</div><div style={{ fontSize: '0.75rem', color: '#555' }}>{loan.loanId || loan._id.slice(-6)}</div></td>
+                    <td><div style={{ fontWeight: '700' }}>{loan.loanType || 'Loan'}</div><div style={{ fontSize: '0.75rem', color: '#555' }}>{loan.loanId || loan._id.slice(-6)}</div></td>
                     <td style={{ color: '#ef4444', fontWeight: '700' }}>{formatINR(loan.amount)}</td>
-                    <td><span className={`badge badge-${loan.status === 'approved' || loan.status === 'active' ? 'approved' : 'pending'}`}>{loan.status}</span></td>
+                    <td>
+                      <span className={`badge badge-${loan.status === 'approved' || loan.status === 'active' ? 'approved' : 'pending'}`} style={{ display: 'block', marginBottom: '4px' }}>{loan.status}</span>
+                      {loan.paymentStatus && <span style={{ fontSize: '0.7rem', color: '#8a8aa0' }}>Pay: {loan.paymentStatus}</span>}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -106,6 +109,55 @@ const DashboardTab = memo(({ user, portfolio, score, scoreColor, scoreLabel, not
           )) : <div style={{ textAlign: 'center', color: '#555', padding: '20px' }}>No new updates.</div>}
         </div>
       </GlassCard>
+    </div>
+
+    <div style={{ marginTop: '40px' }}>
+      <h3 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '20px', color: '#fff' }}>Available Investment Plans</h3>
+      {investmentPlans && investmentPlans.length > 0 ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+          {investmentPlans.map((plan) => (
+            <GlassCard key={plan._id} style={{ borderTop: `4px solid ${pc}` }}>
+              <TrendingUp size={24} color={pc} style={{ marginBottom: '12px' }} />
+              <h4 style={{ fontSize: '1.1rem', margin: '0 0 8px', color: '#fff' }}>{plan.name}</h4>
+              <p style={{ margin: '0 0 4px', color: '#22c55e', fontWeight: 'bold' }}>{plan.returnPercentage}% {plan.returnType} Return</p>
+              <p style={{ margin: '0 0 12px', fontSize: '0.85rem', color: '#8a8aa0' }}>Frequency: {plan.frequency}</p>
+              <button className="action-btn-primary" style={{ width: '100%', padding: '10px', fontSize: '0.9rem' }}>Apply Now</button>
+            </GlassCard>
+          ))}
+        </div>
+      ) : (
+        <GlassCard style={{ textAlign: 'center', padding: '30px' }}>
+          <p style={{ color: '#8a8aa0', margin: 0 }}>Amazing investment plans are being finalized. Check back soon!</p>
+        </GlassCard>
+      )}
+    </div>
+
+    <div style={{ marginTop: '40px', paddingBottom: '20px' }}>
+      <h3 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '20px', color: '#fff' }}>Hall of Fame</h3>
+      {achievers && achievers.length > 0 ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+          {achievers.slice(0, 4).map((achiever) => (
+            <GlassCard key={achiever._id} style={{ padding: '0', overflow: 'hidden' }}>
+              {achiever.imageUrl ? (
+                <img src={achiever.imageUrl} alt={achiever.title} style={{ width: '100%', height: '160px', objectFit: 'cover' }} />
+              ) : (
+                <div style={{ width: '100%', height: '160px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Gift size={32} color="#cbd5e1" />
+                </div>
+              )}
+              <div style={{ padding: '16px' }}>
+                <h4 style={{ margin: '0 0 4px', fontSize: '1rem', color: '#fff' }}>{achiever.personName || achiever.title}</h4>
+                {achiever.planName && <p style={{ margin: '0 0 8px', fontSize: '0.8rem', color: '#fbbf24', fontWeight: 'bold' }}>{achiever.planName}</p>}
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#8a8aa0', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{achiever.description}</p>
+              </div>
+            </GlassCard>
+          ))}
+        </div>
+      ) : (
+        <GlassCard style={{ textAlign: 'center', padding: '30px' }}>
+          <p style={{ color: '#8a8aa0', margin: 0 }}>Success stories are loading up!</p>
+        </GlassCard>
+      )}
     </div>
   </motion.div>
 ));
@@ -163,8 +215,14 @@ const PortfolioTab = memo(({ portfolio }) => (
         {portfolio?.loans?.length > 0 ? portfolio.loans.map(loan => (
           <GlassCard key={loan._id} style={{ borderLeft: `4px solid ${loan.status === 'approved' ? '#22c55e' : pc}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-              <span style={{ fontWeight: '800', fontSize: '1.1rem' }}>{loan.purpose || 'Personal Loan'}</span>
-              <span className={`badge badge-${loan.status === 'approved' || loan.status === 'active' ? 'approved' : 'pending'}`}>{loan.status?.toUpperCase()}</span>
+              <div>
+                <span style={{ fontWeight: '800', fontSize: '1.1rem', display: 'block' }}>{loan.purpose || 'Personal Loan'}</span>
+                <span style={{ fontSize: '0.8rem', color: '#8a8aa0' }}>{loan.loanType || 'Standard Loan'}</span>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <span className={`badge badge-${loan.status === 'approved' || loan.status === 'active' ? 'approved' : 'pending'}`} style={{ display: 'block', marginBottom: '4px' }}>{loan.status?.toUpperCase()}</span>
+                {loan.paymentStatus && <span style={{ fontSize: '0.7rem', color: '#8a8aa0', textTransform: 'uppercase' }}>Pay: {loan.paymentStatus}</span>}
+              </div>
             </div>
             <div style={{ color: '#8a8aa0', fontSize: '0.8rem', fontWeight: '800', marginBottom: '10px' }}>Loan ID: {loan.loanId || loan._id}</div>
             <div style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '15px' }}>{formatINR(loan.amount)}</div>
@@ -499,6 +557,8 @@ export default function CustomerPortal() {
   const [notifications, setNotifications] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [config, setConfig] = useState(null);
+  const [investmentPlans, setInvestmentPlans] = useState([]);
+  const [achievers, setAchievers] = useState([]);
   
   // Form States
   const [loanForm, setLoanForm] = useState({ amount: '', durationMonths: '12', purpose: '', monthlyIncome: '' });
@@ -528,15 +588,19 @@ export default function CustomerPortal() {
     if (!token) return navigate('/login');
     const headers = { 'x-auth-token': token };
     try {
-      const [uRes, pRes, nRes, cRes] = await Promise.all([
+      const [uRes, pRes, nRes, cRes, plansRes, achieversRes] = await Promise.all([
         axios.get(`${API}/me`, { headers }),
         axios.get(`${API}/portfolio`, { headers }),
         axios.get(`${API}/me/notifications`, { headers }).catch(() => ({ data: [] })),
-        axios.get(`${API}/config`).catch(() => ({ data: {} }))
+        axios.get(`${API}/config`).catch(() => ({ data: {} })),
+        axios.get(`${API}/public/investment-plans`).catch(() => ({ data: [] })),
+        axios.get(`${API}/public/achievers`).catch(() => ({ data: [] }))
       ]);
       setUser(uRes.data);
       setPortfolio(pRes.data);
       setConfig(cRes.data);
+      setInvestmentPlans(plansRes.data);
+      setAchievers(achieversRes.data);
       setProfileForm({ name: uRes.data.name, phone: uRes.data.phone || '', address: uRes.data.address || '' });
       setKycForm({
         panNumber: uRes.data.kyc?.panNumber || '',
@@ -716,7 +780,7 @@ export default function CustomerPortal() {
 
         <main style={{ flex: 1, overflowY: 'auto', padding: '40px' }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-            {activeTab === 'dashboard' && <DashboardTab user={user} portfolio={portfolio} score={score} scoreColor={scoreColor} scoreLabel={scoreLabel} notifications={notifications} />}
+            {activeTab === 'dashboard' && <DashboardTab user={user} portfolio={portfolio} score={score} scoreColor={scoreColor} scoreLabel={scoreLabel} notifications={notifications} investmentPlans={investmentPlans} achievers={achievers} />}
             {activeTab === 'notifications' && <NotificationsTab notifications={notifications} />}
             {activeTab === 'portfolio' && <PortfolioTab portfolio={portfolio} />}
             {activeTab === 'apply' && <ApplyTab loanForm={loanForm} setLoanForm={setLoanForm} handleApplyLoan={handleApplyLoan} />}

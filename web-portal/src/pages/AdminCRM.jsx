@@ -333,14 +333,30 @@ const LoansTab = memo(({ loans, onDecision, setLoanForm }) => {
                 <td><span className={`badge ${loan.status}`}>{loan.status}</span></td>
                 <td>
                   {loan.status === 'pending' ? (
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <input placeholder="Rate %" type="number" className="admin-input sm" onChange={e => setLoanForm(loan._id, 'rate', e.target.value)} />
-                      <input placeholder="EMI Amt" type="number" className="admin-input sm" onChange={e => setLoanForm(loan._id, 'emi', e.target.value)} />
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      <input placeholder="Rate %" type="number" className="admin-input sm" onChange={e => setLoanForm(loan._id, 'rate', e.target.value)} style={{ width: '80px' }} />
+                      <input placeholder="EMI Amt" type="number" className="admin-input sm" onChange={e => setLoanForm(loan._id, 'emi', e.target.value)} style={{ width: '100px' }} />
+                      <input placeholder="Loan Type" type="text" className="admin-input sm" onChange={e => setLoanForm(loan._id, 'loanType', e.target.value)} style={{ width: '120px' }} />
                     </div>
                   ) : (
-                    <div style={{ fontSize: '0.9rem' }}>
+                    <div style={{ fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                       <div>Rate: {loan.interestRate || '—'}%</div>
                       <div>EMI: {loan.emiAmount != null ? formatINR(loan.emiAmount) : '—'}</div>
+                      <div>Type: {loan.loanType || '—'}</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span>Status:</span>
+                        <select 
+                          className="admin-input sm" 
+                          style={{ width: 'auto', padding: '2px 6px', fontSize: '0.8rem' }}
+                          value={loan.paymentStatus || 'unpaid'}
+                          onChange={(e) => onDecision(loan._id, loan.status, { paymentStatus: e.target.value })}
+                        >
+                          <option value="unpaid">Unpaid</option>
+                          <option value="paid">Paid</option>
+                          <option value="overdue">Overdue</option>
+                          <option value="defaulted">Defaulted</option>
+                        </select>
+                      </div>
                     </div>
                   )}
                 </td>
@@ -383,6 +399,137 @@ const ActiveLoansTab = memo(({ loans }) => (
     </div>
   </SectionCard>
 ));
+
+const InvestmentPlansTab = memo(({ plans, onAdd, onDelete, onUpdate }) => {
+  const [form, setForm] = useState({ name: '', description: '', returnPercentage: '', returnType: 'Fixed', frequency: 'Monthly', minimumAmount: '' });
+  const [editingId, setEditingId] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (editingId) {
+      onUpdate(editingId, form);
+      setEditingId(null);
+    } else {
+      onAdd(form);
+    }
+    setForm({ name: '', description: '', returnPercentage: '', returnType: 'Fixed', frequency: 'Monthly', minimumAmount: '' });
+  };
+
+  const editPlan = (plan) => {
+    setEditingId(plan._id);
+    setForm({ name: plan.name, description: plan.description, returnPercentage: plan.returnPercentage, returnType: plan.returnType, frequency: plan.frequency, minimumAmount: plan.minimumAmount || '' });
+  };
+
+  return (
+    <Grid>
+      <SectionCard title={editingId ? "✏️ Edit Investment Plan" : "➕ Create Investment Plan"}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <FormField label="Plan Name"><input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="admin-input" required /></FormField>
+          <FormField label="Description"><textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="admin-input" rows="2" /></FormField>
+          <Grid>
+            <FormField label="Return (%)"><input type="number" step="0.1" value={form.returnPercentage} onChange={e => setForm({...form, returnPercentage: e.target.value})} className="admin-input" required /></FormField>
+            <FormField label="Return Type">
+              <select className="admin-input" value={form.returnType} onChange={e => setForm({...form, returnType: e.target.value})}>
+                <option value="Fixed">Fixed</option>
+                <option value="Variable">Variable</option>
+              </select>
+            </FormField>
+          </Grid>
+          <Grid>
+            <FormField label="Frequency">
+              <select className="admin-input" value={form.frequency} onChange={e => setForm({...form, frequency: e.target.value})}>
+                <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Yearly">Yearly</option>
+              </select>
+            </FormField>
+            <FormField label="Min Amount (₹)"><input type="number" value={form.minimumAmount} onChange={e => setForm({...form, minimumAmount: e.target.value})} className="admin-input" /></FormField>
+          </Grid>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+            <button type="submit" className="action-btn-primary" style={{ flex: 1 }}>{editingId ? "Update Plan" : "Create Plan"}</button>
+            {editingId && <button type="button" className="icon-btn danger" style={{ width: 'auto', padding: '0 16px' }} onClick={() => { setEditingId(null); setForm({ name: '', description: '', returnPercentage: '', returnType: 'Fixed', frequency: 'Monthly', minimumAmount: '' }); }}>Cancel</button>}
+          </div>
+        </form>
+      </SectionCard>
+      
+      <SectionCard title="📈 Active Plans">
+        <div style={{ overflowX: 'auto' }}>
+          <table className="admin-table">
+            <thead><tr><th>Name</th><th>Returns</th><th>Freq</th><th>Actions</th></tr></thead>
+            <tbody>
+              {plans.map(plan => (
+                <tr key={plan._id}>
+                  <td><div style={{ fontWeight: '700' }}>{plan.name}</div></td>
+                  <td style={{ color: '#22c55e', fontWeight: '700' }}>{plan.returnPercentage}% {plan.returnType}</td>
+                  <td>{plan.frequency}</td>
+                  <td>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <button onClick={() => editPlan(plan)} className="icon-btn primary"><Settings size={16} /></button>
+                      <button onClick={() => onDelete(plan._id)} className="icon-btn danger"><Trash2 size={16} /></button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </SectionCard>
+    </Grid>
+  );
+});
+
+const AchieversTab = memo(({ achievers, onAdd, onDelete }) => {
+  const [form, setForm] = useState({ title: '', personName: '', investmentType: '', planName: '', description: '', dateOfAchievement: '' });
+  const [imageFile, setImageFile] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    Object.keys(form).forEach(key => formData.append(key, form[key]));
+    if (imageFile) formData.append('image', imageFile);
+    await onAdd(formData);
+    setForm({ title: '', personName: '', investmentType: '', planName: '', description: '', dateOfAchievement: '' });
+    setImageFile(null);
+  };
+
+  return (
+    <Grid>
+      <SectionCard title="🏆 Add Achiever">
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <FormField label="Person Name"><input type="text" value={form.personName} onChange={e => setForm({...form, personName: e.target.value})} className="admin-input" required /></FormField>
+          <FormField label="Display Title / Role"><input type="text" value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="admin-input" required /></FormField>
+          <Grid>
+            <FormField label="Investment Type"><input type="text" value={form.investmentType} onChange={e => setForm({...form, investmentType: e.target.value})} className="admin-input" /></FormField>
+            <FormField label="Plan Name"><input type="text" value={form.planName} onChange={e => setForm({...form, planName: e.target.value})} className="admin-input" /></FormField>
+          </Grid>
+          <FormField label="Achievement Date"><input type="date" value={form.dateOfAchievement} onChange={e => setForm({...form, dateOfAchievement: e.target.value})} className="admin-input" /></FormField>
+          <FormField label="Description / Story"><textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="admin-input" rows="2" /></FormField>
+          <FormField label="Photo (Auto-compressed)"><input type="file" accept="image/*" onChange={e => setImageFile(e.target.files[0])} className="admin-input" /></FormField>
+          <button type="submit" className="action-btn-primary" style={{ marginTop: '10px' }}>Add Achiever</button>
+        </form>
+      </SectionCard>
+      
+      <SectionCard title="🌟 Hall of Fame">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+          {achievers.map(achiever => (
+            <div key={achiever._id} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', overflow: 'hidden' }}>
+              {achiever.imageUrl && <img src={achiever.imageUrl} alt={achiever.title} style={{ width: '100%', height: '140px', objectFit: 'cover' }} />}
+              <div style={{ padding: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <h4 style={{ margin: '0 0 4px', fontSize: '1rem' }}>{achiever.personName || achiever.title}</h4>
+                  <button onClick={() => onDelete(achiever._id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                </div>
+                <p style={{ fontSize: '0.8rem', color: '#8a8aa0', margin: '0 0 8px' }}>{achiever.title}</p>
+                {achiever.planName && <p style={{ fontSize: '0.75rem', color: '#fbbf24', margin: '0 0 8px' }}>Plan: {achiever.planName}</p>}
+                <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: '0' }}>{achiever.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </SectionCard>
+    </Grid>
+  );
+});
 
 const InvestmentsTab = memo(({ users, investments, onAdd, onDelete }) => {
   const [form, setForm] = useState({ userId: '', type: 'FD', amount: '', rate: '', duration: '' });
@@ -985,6 +1132,8 @@ export default function AdminCRM() {
   const [allInvestments, setAllInvestments] = useState([]);
   const [allLeads, setAllLeads] = useState([]);
   const [allAnnouncements, setAllAnnouncements] = useState([]);
+  const [investmentPlans, setInvestmentPlans] = useState([]);
+  const [achievers, setAchievers] = useState([]);
   const [config, setConfig] = useState(null);
   const [loanForm, setLoanFormState] = useState({});
   const navigate = useNavigate();
@@ -1006,13 +1155,15 @@ export default function AdminCRM() {
     if (!token) return navigate('/login');
     const headers = { 'x-auth-token': token };
     try {
-      const [uRes, lRes, iRes, ldRes, aRes, cRes] = await Promise.all([
+      const [uRes, lRes, iRes, ldRes, aRes, cRes, plansRes, achieversRes] = await Promise.all([
         axios.get(`${API}/users`, { headers }),
         axios.get(`${API}/admin/loans/all`, { headers }),
         axios.get(`${API}/admin/investments/all`, { headers }),
         axios.get(`${API}/admin/leads/all`, { headers }),
         axios.get(`${API}/admin/announcements/all`, { headers }),
-        axios.get(`${API}/config`, { headers })
+        axios.get(`${API}/config`, { headers }),
+        axios.get(`${API}/admin/investment-plans`, { headers }).catch(() => ({ data: [] })),
+        axios.get(`${API}/admin/achievers`, { headers }).catch(() => ({ data: [] }))
       ]);
       setAllUsers(uRes.data);
       setAllLoans(lRes.data);
@@ -1020,6 +1171,8 @@ export default function AdminCRM() {
       setAllLeads(ldRes.data);
       setAllAnnouncements(aRes.data);
       setConfig(cRes.data);
+      setInvestmentPlans(plansRes.data);
+      setAchievers(achieversRes.data);
     } catch (err) {
       console.error(err);
       if (err.response?.status === 403) navigate('/customer');
@@ -1072,6 +1225,41 @@ export default function AdminCRM() {
       await axios.delete(`${API}/admin/investments/${id}`, { headers: { 'x-auth-token': localStorage.getItem('token') } });
       fetchData();
     } catch (err) { console.error(err); alert('Delete failed'); }
+  };
+
+  const handleAddInvestmentPlan = async (data) => {
+    try {
+      await axios.post(`${API}/admin/investment-plans`, data, { headers: { 'x-auth-token': localStorage.getItem('token') } });
+      fetchData();
+    } catch (err) { console.error(err); alert('Failed to create investment plan'); }
+  };
+
+  const handleUpdateInvestmentPlan = async (id, data) => {
+    try {
+      await axios.put(`${API}/admin/investment-plans/${id}`, data, { headers: { 'x-auth-token': localStorage.getItem('token') } });
+      fetchData();
+    } catch (err) { console.error(err); alert('Failed to update investment plan'); }
+  };
+
+  const handleDeleteInvestmentPlan = async (id) => {
+    try {
+      await axios.delete(`${API}/admin/investment-plans/${id}`, { headers: { 'x-auth-token': localStorage.getItem('token') } });
+      fetchData();
+    } catch (err) { console.error(err); alert('Failed to delete investment plan'); }
+  };
+
+  const handleAddAchiever = async (formData) => {
+    try {
+      await axios.post(`${API}/admin/achievers`, formData, { headers: { 'x-auth-token': localStorage.getItem('token'), 'Content-Type': 'multipart/form-data' } });
+      fetchData();
+    } catch (err) { console.error(err); alert('Failed to add achiever'); }
+  };
+
+  const handleDeleteAchiever = async (id) => {
+    try {
+      await axios.delete(`${API}/admin/achievers/${id}`, { headers: { 'x-auth-token': localStorage.getItem('token') } });
+      fetchData();
+    } catch (err) { console.error(err); alert('Failed to delete achiever'); }
   };
 
   const handleSaveConfig = async () => {
@@ -1159,6 +1347,8 @@ export default function AdminCRM() {
     { id: 'users', label: 'Clients', icon: <Users size={18} /> },
     { id: 'loans', label: 'Applications', icon: <Clock size={18} /> },
     { id: 'active_loans', label: 'Portfolio', icon: <TrendingUp size={18} /> },
+    { id: 'investment_plans', label: 'Inv Plans Mgmt', icon: <DollarSign size={18} /> },
+    { id: 'achievers', label: 'Achievers', icon: <CheckCircle size={18} /> },
     { id: 'investments', label: 'Investments', icon: <DollarSign size={18} /> },
     { id: 'leads', label: 'Inquiries', icon: <MessageSquare size={18} /> },
     { id: 'accounting', label: 'Accounting', icon: <BookOpen size={18} /> },
@@ -1219,6 +1409,8 @@ export default function AdminCRM() {
           {activeTab === 'users' && <UsersTab users={allUsers} onUpdate={handleUpdateUser} />}
           {activeTab === 'loans' && <LoansTab loans={allLoans} onDecision={handleLoanDecision} loanForm={loanForm} setLoanForm={setLoanForm} />}
           {activeTab === 'active_loans' && <ActiveLoansTab loans={allLoans} />}
+          {activeTab === 'investment_plans' && <InvestmentPlansTab plans={investmentPlans} onAdd={handleAddInvestmentPlan} onUpdate={handleUpdateInvestmentPlan} onDelete={handleDeleteInvestmentPlan} />}
+          {activeTab === 'achievers' && <AchieversTab achievers={achievers} onAdd={handleAddAchiever} onDelete={handleDeleteAchiever} />}
           {activeTab === 'investments' && <InvestmentsTab users={allUsers} investments={allInvestments} onAdd={handleAddInvestment} onDelete={handleDeleteInvestment} />}
           {activeTab === 'leads' && <LeadsTab leads={allLeads} onUpdate={handleUpdateLead} onCreate={handleCreateLead} onDelete={handleDeleteLead} />}
           {activeTab === 'accounting' && <AccountingTab />}

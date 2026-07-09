@@ -144,6 +144,20 @@ const notifyLoanOverdue = async (userId, loanId, overdueAmount, userEmail) => {
   );
 };
 
+const notifyLoanPaymentStatus = async (userId, loanId, status, userEmail) => {
+  return createNotification(
+    userId,
+    `💰 Loan Payment ${status}`,
+    `Your loan (ID: ${loanId}) payment status has been updated to ${status}.`,
+    'loan_payment_status',
+    {
+      email: userEmail,
+      metadata: { loanId, status },
+      actionUrl: 'portfolio'
+    }
+  );
+};
+
 // ══════════ INVESTMENT NOTIFICATIONS ══════════
 
 const notifyInvestmentReceived = async (userId, investmentAmount, investmentType, userEmail) => {
@@ -277,6 +291,7 @@ module.exports = {
   notifyLoanRejected,
   notifyLoanSubmitted,
   notifyLoanOverdue,
+  notifyLoanPaymentStatus,
   notifyInvestmentReceived,
   notifyInvestmentRejected,
   notifyInvestmentMatured,

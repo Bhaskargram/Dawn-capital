@@ -12,6 +12,8 @@ const LoanSchema = new mongoose.Schema({
     min: 1000
   },
   purpose: { type: String, default: 'Personal' },
+  loanType: { type: String, default: 'Personal' },
+  paymentStatus: { type: String, enum: ['Paid', 'Pending', 'Overdue'], default: 'Pending' },
   monthlyIncome: { type: Number, default: 0, min: 0 },
   interestRate: {
     type: Number,

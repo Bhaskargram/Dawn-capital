@@ -6,6 +6,7 @@ const Loan = require('../models/Loan');
 const Notification = require('../models/Notification');
 const Achiever = require('../models/Achiever');
 const Lead = require('../models/Lead');
+const InvestmentPlan = require('../models/InvestmentPlan');
 const auth = require('../middleware/auth');
 const {
   createNotification,
@@ -88,6 +89,8 @@ router.put('/loans/:id/status', adminAuth, async (req, res) => {
     if (emiAmount !== undefined) updates.emiAmount = Number(emiAmount);
     if (interestRate !== undefined) updates.interestRate = Number(interestRate);
     if (rejectionReason !== undefined) updates.rejectionReason = rejectionReason;
+    if (req.body.paymentStatus !== undefined) updates.paymentStatus = req.body.paymentStatus;
+    if (req.body.loanType !== undefined) updates.loanType = req.body.loanType;
 
     const loan = await Loan.findByIdAndUpdate(req.params.id, { $set: updates }, { new: true }).populate('user', 'name email phone');
     
@@ -105,6 +108,15 @@ router.put('/loans/:id/status', adminAuth, async (req, res) => {
           loan.user._id,
           loan.loanId,
           rejectionReason || 'Application criteria not met',
+          loan.user.email
+        ).catch(err => console.error('Notification failed:', err));
+      }
+      if (req.body.paymentStatus !== undefined) {
+        const { notifyLoanPaymentStatus } = require('../utils/notificationService');
+        await notifyLoanPaymentStatus(
+          loan.user._id,
+          loan.loanId,
+          req.body.paymentStatus,
           loan.user.email
         ).catch(err => console.error('Notification failed:', err));
       }
@@ -207,8 +219,17 @@ router.put('/users/:id', adminAuth, async (req, res) => {
 // @desc    Add an Achiever to the public board
 router.post('/achievers', adminAuth, async (req, res) => {
   try {
-    const { name, title, description, imageUrl } = req.body;
-    const achiever = new Achiever({ name, title, description, imageUrl });
+    const { name, title, description, imageUrl, dateOfAchievement, investmentType, planName, personName } = req.body;
+    const achiever = new Achiever({ 
+      name, 
+      title, 
+      description, 
+      imageUrl,
+      dateOfAchievement: dateOfAchievement || Date.now(),
+      investmentType: investmentType || '',
+      planName: planName || '',
+      personName: personName || ''
+    });
     await achiever.save();
     res.json(achiever);
   } catch (err) {
@@ -442,6 +463,53 @@ router.delete('/investments/:id', adminAuth, async (req, res) => {
   try {
     await Investment.findByIdAndDelete(req.params.id);
     res.json({ msg: 'Investment deleted' });
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   GET api/admin/investment-plans
+// @desc    Get all investment plans
+router.get('/investment-plans', adminAuth, async (req, res) => {
+  try {
+    const plans = await InvestmentPlan.find().sort({ createdAt: -1 });
+    res.json(plans);
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   POST api/admin/investment-plans
+// @desc    Create a new investment plan
+router.post('/investment-plans', adminAuth, async (req, res) => {
+  try {
+    const { name, returnPercentage, returnType, frequency, dateRange, isActive } = req.body;
+    const plan = new InvestmentPlan({ name, returnPercentage, returnType, frequency, dateRange, isActive });
+    await plan.save();
+    res.json(plan);
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   PUT api/admin/investment-plans/:id
+// @desc    Update an investment plan
+router.put('/investment-plans/:id', adminAuth, async (req, res) => {
+  try {
+    const updates = req.body;
+    const plan = await InvestmentPlan.findByIdAndUpdate(req.params.id, { $set: updates }, { new: true });
+    res.json(plan);
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   DELETE api/admin/investment-plans/:id
+// @desc    Delete an investment plan
+router.delete('/investment-plans/:id', adminAuth, async (req, res) => {
+  try {
+    await InvestmentPlan.findByIdAndDelete(req.params.id);
+    res.json({ msg: 'Investment Plan deleted' });
   } catch (err) {
     res.status(500).send('Server Error');
   }

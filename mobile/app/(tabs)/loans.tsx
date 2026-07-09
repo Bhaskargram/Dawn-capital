@@ -104,11 +104,18 @@ export default function LoansScreen() {
               <View key={loan._id || i} style={s.card}>
                 <View style={s.cardTop}>
                   <View>
-                    <Text style={s.loanType}>{loan.purpose || 'Personal Loan'}</Text>
+                    <Text style={s.loanType}>{loan.loanType || loan.purpose || 'Personal Loan'}</Text>
                     <Text style={{ fontSize: 10, color: COLORS.textMuted }}>{loan.loanId || loan._id.slice(-6)}</Text>
                   </View>
-                  <View style={[s.activeBadge, { backgroundColor: (loan.status === 'active' || loan.status === 'approved') ? 'rgba(34,197,94,0.15)' : loan.status === 'pending' ? 'rgba(251,191,36,0.15)' : 'rgba(239,68,68,0.15)' }]}>
-                    <Text style={[s.activeText, { color: (loan.status === 'active' || loan.status === 'approved') ? COLORS.success : loan.status === 'pending' ? COLORS.warning : COLORS.danger }]}>{loan.status?.toUpperCase() || 'ACTIVE'}</Text>
+                  <View style={{ alignItems: 'flex-end' }}>
+                    <View style={[s.activeBadge, { backgroundColor: (loan.status === 'active' || loan.status === 'approved') ? 'rgba(34,197,94,0.15)' : loan.status === 'pending' ? 'rgba(251,191,36,0.15)' : 'rgba(239,68,68,0.15)' }]}>
+                      <Text style={[s.activeText, { color: (loan.status === 'active' || loan.status === 'approved') ? COLORS.success : loan.status === 'pending' ? COLORS.warning : COLORS.danger }]}>{loan.status?.toUpperCase() || 'ACTIVE'}</Text>
+                    </View>
+                    {loan.paymentStatus && (
+                      <Text style={{ fontSize: 10, color: COLORS.textSecondary, marginTop: 4, fontWeight: '700', textTransform: 'uppercase' }}>
+                        Pmt: <Text style={{ color: loan.paymentStatus === 'paid' ? COLORS.success : loan.paymentStatus === 'overdue' || loan.paymentStatus === 'defaulted' ? COLORS.danger : COLORS.warning }}>{loan.paymentStatus}</Text>
+                      </Text>
+                    )}
                   </View>
                 </View>
                 <View style={s.cardRow}>

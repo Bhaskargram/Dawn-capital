@@ -8,8 +8,12 @@ const InvestmentSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['FD', 'RD'],
+    enum: ['FD', 'RD', 'Plan'],
     required: true
+  },
+  investmentPlan: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'InvestmentPlan'
   },
   amount: {
     type: Number,

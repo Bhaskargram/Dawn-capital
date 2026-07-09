@@ -74,6 +74,15 @@ const emailTemplates = {
     </table>
     <p style="color:#64748b;">You may reapply after addressing the above. Contact support for assistance.</p>`,
 
+  loan_payment_status: (vars) => `
+    <h2 style="margin:0 0 16px;color:#1a1a2e;font-size:22px;">💰 Loan Payment ${vars.status}</h2>
+    <p>Dear <strong>${vars.userName}</strong>,</p>
+    <p>Your loan payment status has been updated to <strong>${vars.status}</strong>.</p>
+    <table style="width:100%;border-collapse:collapse;margin:20px 0;background:#f8fafc;border-radius:12px;overflow:hidden;">
+      <tr><td style="padding:14px 20px;color:#64748b;font-size:13px;font-weight:600;text-transform:uppercase;">Loan ID</td><td style="padding:14px 20px;font-weight:700;color:#1a1a2e;">${vars.loanId || '—'}</td></tr>
+    </table>
+    <p style="color:#64748b;">Log in to your dashboard to view the full details.</p>`,
+
   investment_received: (vars) => `
     <h2 style="margin:0 0 16px;color:#1a1a2e;font-size:22px;">✅ Investment Confirmed</h2>
     <p>Dear <strong>${vars.userName}</strong>,</p>

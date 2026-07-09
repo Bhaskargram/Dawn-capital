@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext';
 import { API_URL, COLORS } from '@/constants/Config';
 import Animated, { FadeInDown, FadeInRight, ZoomIn } from 'react-native-reanimated';
-import { TrendingUp, Activity, PieChart, Bell, ShieldCheck } from 'lucide-react-native';
+import { TrendingUp, Activity, PieChart, Bell, ShieldCheck, Gift, Users } from 'lucide-react-native';
 import CreditScoreGauge from '@/components/CreditScoreGauge';
 
 const { width } = Dimensions.get('window');
@@ -27,19 +27,25 @@ export default function DashboardScreen() {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [config, setConfig] = useState<any>(null);
+  const [investmentPlans, setInvestmentPlans] = useState<any[]>([]);
+  const [achievers, setAchievers] = useState<any[]>([]);
 
   const fetchData = useCallback(async () => {
     if (!token) return;
     const h = { 'x-auth-token': token };
     try {
-      const [portRes, notifRes, configRes] = await Promise.all([
+      const [portRes, notifRes, configRes, plansRes, achieversRes] = await Promise.all([
         axios.get(`${API_URL}/portfolio`, { headers: h }),
         axios.get(`${API_URL}/me/notifications`, { headers: h }).catch(() => ({ data: [] })),
         axios.get(`${API_URL}/config`).catch(() => ({ data: {} })),
+        axios.get(`${API_URL}/public/investment-plans`).catch(() => ({ data: [] })),
+        axios.get(`${API_URL}/public/achievers`).catch(() => ({ data: [] })),
       ]);
       setPortfolio(portRes.data);
       setNotifications(notifRes.data);
       setConfig(configRes.data);
+      setInvestmentPlans(plansRes.data);
+      setAchievers(achieversRes.data);
       await refreshUser();
     } catch (e) { console.error(e); }
   }, [token]);
@@ -197,6 +203,59 @@ export default function DashboardScreen() {
               </View>
             )}
           </GlassCard>
+        </Animated.View>
+
+        {/* ═══════ INVESTMENT PLANS ═══════ */}
+        <Animated.View entering={FadeInDown.delay(350).duration(400)}>
+          <Text style={s.sectionTitle}>💰 Investment Plans</Text>
+          {investmentPlans && investmentPlans.length > 0 ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -16, paddingHorizontal: 16 }} contentContainerStyle={{ gap: 16, paddingRight: 32 }}>
+              {investmentPlans.map((plan: any) => (
+                <GlassCard key={plan._id} style={{ width: 260, borderTopColor: pc, borderTopWidth: 4, marginBottom: 0 }}>
+                  <TrendingUp size={24} color={pc} style={{ marginBottom: 12 }} />
+                  <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800', marginBottom: 4 }}>{plan.name}</Text>
+                  <Text style={{ color: '#22c55e', fontSize: 14, fontWeight: '700', marginBottom: 4 }}>{plan.returnPercentage}% {plan.returnType} Return</Text>
+                  <Text style={{ color: '#8a8aa0', fontSize: 12, marginBottom: 12 }}>Frequency: {plan.frequency}</Text>
+                  <TouchableOpacity style={s.actionBtn} onPress={() => router.push('/(tabs)/investments')}>
+                    <Text style={s.actionBtnText}>Apply Now</Text>
+                  </TouchableOpacity>
+                </GlassCard>
+              ))}
+            </ScrollView>
+          ) : (
+            <GlassCard style={{ padding: 20, alignItems: 'center' }}>
+              <Text style={{ color: '#8a8aa0', fontSize: 13, textAlign: 'center' }}>Amazing investment plans are being finalized. Check back soon!</Text>
+            </GlassCard>
+          )}
+        </Animated.View>
+
+        {/* ═══════ ACHIEVERS ═══════ */}
+        <Animated.View entering={FadeInDown.delay(380).duration(400)} style={{ marginTop: 24 }}>
+          <Text style={s.sectionTitle}>🏆 Hall of Fame</Text>
+          {achievers && achievers.length > 0 ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -16, paddingHorizontal: 16 }} contentContainerStyle={{ gap: 16, paddingRight: 32 }}>
+              {achievers.slice(0, 4).map((achiever: any) => (
+                <GlassCard key={achiever._id} style={{ width: 220, padding: 0, overflow: 'hidden', marginBottom: 0 }}>
+                  {achiever.imageUrl ? (
+                    <Image source={{ uri: achiever.imageUrl }} style={{ width: '100%', height: 140 }} />
+                  ) : (
+                    <View style={{ width: '100%', height: 140, backgroundColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center' }}>
+                      <Gift size={32} color="#cbd5e1" />
+                    </View>
+                  )}
+                  <View style={{ padding: 16 }}>
+                    <Text style={{ color: '#fff', fontSize: 14, fontWeight: '700', marginBottom: 4 }}>{achiever.personName || achiever.title}</Text>
+                    {achiever.planName && <Text style={{ color: '#fbbf24', fontSize: 12, fontWeight: '700', marginBottom: 6 }}>{achiever.planName}</Text>}
+                    <Text style={{ color: '#8a8aa0', fontSize: 12 }} numberOfLines={2}>{achiever.description}</Text>
+                  </View>
+                </GlassCard>
+              ))}
+            </ScrollView>
+          ) : (
+            <GlassCard style={{ padding: 20, alignItems: 'center' }}>
+              <Text style={{ color: '#8a8aa0', fontSize: 13, textAlign: 'center' }}>Success stories are loading up!</Text>
+            </GlassCard>
+          )}
         </Animated.View>
 
         {/* ═══════ RECENT NOTIFICATIONS ═══════ */}
@@ -449,5 +508,16 @@ const s = StyleSheet.create({
     color: '#555',
     fontSize: 13,
     textAlign: 'center',
+  },
+  actionBtn: {
+    backgroundColor: pc,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  actionBtnText: {
+    color: 'white',
+    fontSize: 13,
+    fontWeight: '800',
   },
 });

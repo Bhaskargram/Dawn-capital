@@ -63,6 +63,7 @@ exports.register = async (req, res) => {
     const welcomeHtml = `
       <h3 style="color: #333;">Welcome to Dawn Multipurpose, ${name.trim()}!</h3>
       <p style="color: #555; line-height: 1.6;">We're thrilled to have you onboard. Your financial journey begins now. With Dawn Multipurpose, you can track investments, apply for loans, and monitor your credit health all in one place.</p>
+      <p style="color: #d9534f; font-weight: bold;">Note: Your KYC is not active till our team will do it, then you will get an email like this.</p>
       <p style="color: #555;">Log in to your dashboard to get started.</p>
       <a href="https://dawncapital.online/login" style="display: inline-block; padding: 10px 20px; background-color: #C21B2F; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px;">Go to Dashboard</a>
     `;

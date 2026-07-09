@@ -135,6 +135,8 @@ export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState(0);
   const [config, setConfig] = useState(null);
   const [maintenance, setMaintenance] = useState(null);
+  const [investmentPlans, setInvestmentPlans] = useState([]);
+  const [achievers, setAchievers] = useState([]);
 
   const API = import.meta.env.VITE_API_URL || 'https://api.dawncapital.online/api';
 
@@ -152,7 +154,21 @@ export default function LandingPage() {
       }
     };
 
+    const fetchPublicData = async () => {
+      try {
+        const [plansRes, achieversRes] = await Promise.all([
+          axios.get(`${API}/public/investment-plans`).catch(() => ({ data: [] })),
+          axios.get(`${API}/public/achievers`).catch(() => ({ data: [] }))
+        ]);
+        setInvestmentPlans(plansRes.data);
+        setAchievers(achieversRes.data);
+      } catch (err) {
+        console.error('Failed to fetch public data', err);
+      }
+    };
+
     fetchConfig();
+    fetchPublicData();
   }, [API]);
 
   if (maintenance) {
@@ -294,6 +310,63 @@ export default function LandingPage() {
               </motion.article>
             );
           })}
+        </section>
+
+        <section className="dc-section" id="investment-plans">
+          <span className="dc-kicker">Investment Plans</span>
+          <h2>Grow your wealth with us.</h2>
+          
+          {investmentPlans.length > 0 ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginTop: '32px' }}>
+              {investmentPlans.map((plan) => (
+                <div key={plan._id} className="dc-service-card" style={{ minHeight: 'auto' }}>
+                  <TrendingUp size={28} />
+                  <h3>{plan.name}</h3>
+                  <p>{plan.returnPercentage}% {plan.returnType} Return</p>
+                  <p style={{ fontSize: '0.9rem', margin: 0 }}>Frequency: {plan.frequency}</p>
+                  {plan.description && <p style={{ fontSize: '0.85rem' }}>{plan.description}</p>}
+                  <Link to="/login?mode=signup" style={{ marginTop: '12px' }}>Apply Now <ArrowRight size={16} /></Link>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ padding: '40px', textAlign: 'center', background: '#f8fafc', borderRadius: '12px', marginTop: '32px' }}>
+              <p style={{ color: '#64748b', fontSize: '1.1rem', margin: 0 }}>Amazing investment plans are being finalized. Check back soon!</p>
+            </div>
+          )}
+        </section>
+
+        <section className="dc-section" id="achievers">
+          <span className="dc-kicker">Our Achievers</span>
+          <h2>Celebrating success and growth.</h2>
+          
+          {achievers.length > 0 ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px', marginTop: '32px' }}>
+              {achievers.map((achiever) => (
+                <div key={achiever._id} style={{ background: '#fff', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 8px 30px rgba(0,0,0,0.06)' }}>
+                  {achiever.imageUrl ? (
+                    <img src={achiever.imageUrl} alt={achiever.title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ width: '100%', height: '200px', background: '#eef1f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Users size={48} color="#cbd5e1" />
+                    </div>
+                  )}
+                  <div style={{ padding: '20px' }}>
+                    <h3 style={{ margin: '0 0 8px', fontSize: '1.2rem', color: '#111827' }}>{achiever.personName || achiever.title}</h3>
+                    {achiever.planName && <p style={{ margin: '0 0 4px', fontSize: '0.9rem', color: 'var(--dc-primary)', fontWeight: 'bold' }}>{achiever.planName}</p>}
+                    <p style={{ margin: 0, fontSize: '0.95rem', color: '#566173' }}>{achiever.description}</p>
+                    {achiever.dateOfAchievement && (
+                      <p style={{ margin: '12px 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>Achieved: {new Date(achiever.dateOfAchievement).toLocaleDateString()}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ padding: '40px', textAlign: 'center', background: '#f8fafc', borderRadius: '12px', marginTop: '32px' }}>
+              <p style={{ color: '#64748b', fontSize: '1.1rem', margin: 0 }}>Success stories are loading up!</p>
+            </div>
+          )}
         </section>
 
         <section className="dc-section dc-split" id="tracking">

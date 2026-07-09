@@ -41,4 +41,18 @@ router.get('/announcements', async (req, res) => {
   }
 });
 
+// @route   GET api/public/investment-plans
+// @desc    Get all active investment plans
+// @access  Public
+router.get('/investment-plans', async (req, res) => {
+  try {
+    const InvestmentPlan = require('../models/InvestmentPlan');
+    const plans = await InvestmentPlan.find({ isActive: true }).sort({ createdAt: -1 });
+    res.json(plans);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;

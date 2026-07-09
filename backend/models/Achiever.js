@@ -20,6 +20,22 @@ const AchieverSchema = new mongoose.Schema({
   achievedAt: {
     type: Date,
     default: Date.now
+  },
+  dateOfAchievement: {
+    type: Date,
+    default: Date.now
+  },
+  investmentType: {
+    type: String,
+    default: ''
+  },
+  planName: {
+    type: String,
+    default: ''
+  },
+  personName: {
+    type: String,
+    default: ''
   }
 }, { timestamps: true });
 
